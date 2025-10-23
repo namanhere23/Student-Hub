@@ -24,13 +24,13 @@ object MediaUploadUtils {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             val file = uriToFile(uri, context)
-            Log.d("MediaUploadUtils", "Uploading file: $file")
+            Log.d("Hello4", "Uploading file: $file")
 
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("media", file.name, requestFile)
 
             val response = ApiUploadUtilities.getApiInterface().uploadMedia(body)
-            Log.d("MediaUploadUtils", "Response: ${response.body()}")
+            Log.d("Hello5", "Response: ${response.body()}")
 
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {

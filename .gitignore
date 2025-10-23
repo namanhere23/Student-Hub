@@ -15,3 +15,5 @@
 local.properties
 /app/src/google-services.json
 /app/src/main/res/values/constants.xml
+/.idea/
+/app/src/main/java/com/namangulati/studenthub/API/Constants.kt
