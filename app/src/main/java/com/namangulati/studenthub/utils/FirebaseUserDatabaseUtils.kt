@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.namangulati.studenthub.models.ContactsModel
 import com.namangulati.studenthub.models.UserDetailsModel
 
 object FirebaseUserDatabaseUtils {
@@ -47,6 +48,36 @@ object FirebaseUserDatabaseUtils {
                     onResult(true)
                 }
         }
+    }
+
+    fun loadAllUsers(context: Context, onResult: (List<ContactsModel>) -> Unit){
+        if (FirebaseApp.getApps(context).isEmpty()) {
+            FirebaseApp.initializeApp(context)
+        }
+
+        val database = FirebaseDatabase.getInstance()
+        val usersRef = database.getReference("users")
+
+        usersRef.get()
+            .addOnSuccessListener { snap ->
+                val userList = mutableListOf<UserDetailsModel>()
+
+                for (userSnapshot in snap.children) {
+                    val user = userSnapshot.getValue(UserDetailsModel::class.java)
+                    if (user != null) {
+                        userList.add(user)
+                    }
+                }
+                val contactsList = mutableListOf<ContactsModel>()
+                for (user in userList) {
+                    val contact = ContactsModel(user.name!!, user.email!!,user.uid!!)
+                    contactsList.add(contact)
+                }
+                onResult(contactsList)
+            }
+            .addOnFailureListener { e ->
+                    Log.e("Profile", "Failed to read user")
+            }
     }
 
 }

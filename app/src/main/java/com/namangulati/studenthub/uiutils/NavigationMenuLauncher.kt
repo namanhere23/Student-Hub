@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.namangulati.studenthub.MainActivity
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.models.UserDetailsModel
+import com.namangulati.studenthub.userPages.Chat
 import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
 
@@ -28,8 +29,8 @@ object NavigationMenuLauncher {
                     intent.putExtra("EXTRA_USER_DETAILS", person)
                     activity.startActivity(intent)
                 }
-                R.id.nav_dashboard -> {
-                    val intent=Intent(activity, Dashboard::class.java)
+                R.id.nav_chat -> {
+                    val intent=Intent(activity, Chat::class.java)
                     intent.putExtra("EXTRA_USER_DETAILS", person)
                     activity.startActivity(intent)
                 }

@@ -6,7 +6,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.PapersAdapter
 import com.namangulati.studenthub.fragments.UploadFragment
@@ -32,6 +34,8 @@ class Dashboard : AppCompatActivity() {
         var state=0
 
         val uploadPhoto=findViewById<ImageView>(R.id.UploadPhoto)
+        val viewModel = ViewModelProvider(this).get(LiveDataViewModel::class.java)
+        viewModel.setUser(person)
         uploadPhoto.setOnClickListener {
             if(state%2==0) {
                 supportFragmentManager.beginTransaction().apply {

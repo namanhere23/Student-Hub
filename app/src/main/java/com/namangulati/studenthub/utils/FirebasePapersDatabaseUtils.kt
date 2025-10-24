@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.namangulati.studenthub.models.NotConfirmedPapersModel
 import com.namangulati.studenthub.models.PapersModel
 
 object FirebasePapersDatabaseUtils {
@@ -27,7 +28,7 @@ object FirebasePapersDatabaseUtils {
             }
     }
 
-    fun addPapers(context: Context,paper: PapersModel, onResult: (Boolean) -> Unit){
+    fun addPapers(context: Context,paper: NotConfirmedPapersModel, onResult: (Boolean) -> Unit){
         if (FirebaseApp.getApps(context).isEmpty()) {
             FirebaseApp.initializeApp(context)
         }

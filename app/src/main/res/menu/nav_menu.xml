@@ -3,8 +3,8 @@
         android:id="@+id/nav_home"
         android:title="Home"/>
     <item
-        android:id="@+id/nav_dashboard"
-        android:title="Dashboards" />
+        android:id="@+id/nav_chat"
+        android:title="Chats" />
     <item
         android:id="@+id/admin"
         android:title="Admin"/>

@@ -20,6 +20,13 @@
         android:theme="@style/Theme.StudentHub"
         tools:targetApi="31">
         <activity
+            android:name=".userPages.MessagePage"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
+            android:name=".userPages.Chat"
+            android:exported="false" />
+        <activity
             android:name=".userPages.Dashboard"
             android:exported="false" />
         <activity
@@ -30,7 +37,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -44,7 +50,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
