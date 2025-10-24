@@ -17,6 +17,8 @@ import com.namangulati.studenthub.adapters.MessageAdapter
 import com.namangulati.studenthub.models.Message
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher.launchNavigationMenu
+import com.namangulati.studenthub.utils.GetOfflineOnlineStatus
+import com.namangulati.studenthub.utils.GetOfflineOnlineStatus.getOfflineOnlineStatus
 import java.time.Instant
 import java.time.LocalDateTime
 
@@ -46,6 +48,9 @@ class MessagePage : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.title = name
+        getOfflineOnlineStatus(this, ruid!!) { status ->
+            supportActionBar?.subtitle = status ?: "..."
+        }
 
         recyclerMessages = findViewById(R.id.recyclerMessages)
         etMessage = findViewById(R.id.etMessage)

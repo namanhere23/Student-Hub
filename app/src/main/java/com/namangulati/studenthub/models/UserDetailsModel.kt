@@ -8,5 +8,6 @@ data class UserDetailsModel(
     var mobile: String?=null,
     var photo: String? = null,
     var uid: String?=null,
-    var groups: ArrayList<String> = arrayListOf()
+    var groups: ArrayList<String> = arrayListOf(),
+    var status:String?=null
 ) : Serializable
