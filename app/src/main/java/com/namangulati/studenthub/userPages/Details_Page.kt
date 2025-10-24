@@ -20,7 +20,7 @@ import com.namangulati.studenthub.MainActivity
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
-import com.namangulati.studenthub.utils.MediaUploadUtils.uploadImageToServer
+import com.namangulati.studenthub.utils.MediaUploadUtils.uploadDocumentToServer
 import com.namangulati.studenthub.utils.PermissionsUtils.requestExternalStoragePermission
 
 class Details_Page : AppCompatActivity() {
@@ -157,7 +157,7 @@ class Details_Page : AppCompatActivity() {
         if (uri != null) {
             val url=""
             Log.d("Hello2","Hello2")
-            uploadImageToServer(this,uri){media->
+            uploadDocumentToServer(this,uri){ media->
                 if(media!=null){
                     profileImageUrl = media.data.url
                 }

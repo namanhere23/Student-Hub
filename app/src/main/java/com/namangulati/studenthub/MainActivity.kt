@@ -1,5 +1,6 @@
 package com.namangulati.studenthub
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
@@ -11,10 +12,12 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.credentials.CredentialManager
@@ -39,10 +42,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnContinue: MaterialButton
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val splashScreen = installSplashScreen()
         var isLoading = true
+        splashScreen.setKeepOnScreenCondition { isLoading }
 
         setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -50,6 +56,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val progressBar=findViewById<ProgressBar>(R.id.progressBar)
 
         auth = Firebase.auth
         val currentUser = auth.currentUser
@@ -86,10 +94,6 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-
-
-
         }
 
         else
@@ -106,22 +110,26 @@ class MainActivity : AppCompatActivity() {
         btnContinue = findViewById(R.id.cont)
 
         btnContinue.setOnClickListener {
+            progressBar.visibility = View.VISIBLE
             val emailText = etEmail.text.toString().trim()
 
             val iiitlPattern = Regex("^[A-Za-z0-9._%+-]+@iiitl\\.ac\\.in$", RegexOption.IGNORE_CASE)
 
             if (!iiitlPattern.matches(emailText)) {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this, "Please enter a valid IIITL email (e.g., name@iiitl.ac.in)", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (etPassword.text.toString().length < 8) {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this, "Password must be at least 8 characters", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
             }
 
             FirebaseLoginAuth.checkIfUserExists(this,etEmail.text.toString(), etPassword.text.toString())
+            progressBar.visibility = View.GONE
         }
 
         val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
@@ -161,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
             val credentialManager = CredentialManager.create(this)
             lifecycleScope.launch {
+                progressBar.visibility = View.VISIBLE
                 try {
                     val credential = credentialManager.getCredential(this@MainActivity, request)
                     FirebaseLoginAuth.handleSignIn(this@MainActivity,credential)
@@ -184,6 +193,8 @@ class MainActivity : AppCompatActivity() {
                             ).show()
                         }
                     }
+                } finally {
+                    progressBar.visibility = View.GONE
                 }
             }
         }

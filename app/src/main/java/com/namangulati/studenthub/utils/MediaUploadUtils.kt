@@ -17,16 +17,16 @@ import java.io.File
 
 object MediaUploadUtils {
 
-    fun uploadImageToServer(
+    fun uploadDocumentToServer(
         context: Context,
         uri: Uri,
         onResult: (MediaModel?) -> Unit
     ) {
         CoroutineScope(Dispatchers.IO).launch {
+            try{
             val file = uriToFile(uri, context)
-            Log.d("Hello4", "Uploading file: $file")
-
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val mimeType = context.contentResolver.getType(uri)
+            val requestFile = file.asRequestBody(mimeType?.toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("media", file.name, requestFile)
 
             val response = ApiUploadUtilities.getApiInterface().uploadMedia(body)
@@ -39,7 +39,8 @@ object MediaUploadUtils {
                     Log.e("MediaUploadUtils", "Error uploading image: ${response.errorBody()?.string()}")
                     onResult(null)
                 }
-            }
+            }} catch (e: Exception) {
+                withContext(Dispatchers.Main) { onResult(null) }}
         }
     }
 

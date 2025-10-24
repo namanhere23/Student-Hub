@@ -75,6 +75,7 @@ object FirebaseLoginAuth {
                                         intent.putExtra("EXTRA_USER_DETAILS", profile)
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         activity.startActivity(intent)
+                                        activity.finish()
                                     }
                                 }
                             }

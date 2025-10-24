@@ -50,7 +50,6 @@ class PapersAdapter(
                 if (fileUrl.isNotEmpty()) {
                     val downloadUrl = fileUrl.replace("/upload/", "/upload/fl_attachment/")
                     val fileName = fileUrl.substringAfterLast("/")
-
                     val request = DownloadManager.Request(Uri.parse(downloadUrl))
                         .setTitle("Downloading $fileName")
                         .setDescription("Please wait...")

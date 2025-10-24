@@ -116,6 +116,13 @@
             android:clickable="true"
             android:focusable="true"/>
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center"/>
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cont"
@@ -131,6 +138,8 @@
             android:textColor="@color/white"
             android:text="Continue"
             />
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -166,6 +175,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"/>
+
 
 
 

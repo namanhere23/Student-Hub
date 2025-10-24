@@ -9,25 +9,18 @@
     android:fitsSystemWindows="true"
     >
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-
         <ScrollView
             android:id="@+id/ScrollViewFoodPage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/main"
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView"
@@ -45,22 +38,29 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/UploadPhoto"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/baseline_upload_file_24" />
+
+                <FrameLayout
+                    android:id="@+id/Upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerOrders"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:padding="12dp"
-                    tools:listitem="@layout/papers_recycler"
-                    app:layout_constraintTop_toBottomOf="@id/textView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"/>
+            </LinearLayout>
 
         </ScrollView>
-    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
