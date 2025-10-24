@@ -10,11 +10,11 @@ import com.namangulati.studenthub.models.ContactsModel
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.MessagePage
 
-class ContactsAdapter(
+class ChatsAdapter (
     val context: Context,
     private val contacts: ArrayList<ContactsModel>,
     private val currentUser: UserDetailsModel
-) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ChatsAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ContactsRecyclerBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -35,7 +35,7 @@ class ContactsAdapter(
         holder.binding.ContactEmail.text = contact.email
 
         holder.binding.root.setOnClickListener {
-            val intent=Intent(context,MessagePage::class.java)
+            val intent= Intent(context, MessagePage::class.java)
             intent.putExtra("contact", contact.name)
             intent.putExtra("uid",contact.uid)
             intent.putExtra("EXTRA_USER_DETAILS", currentUser)

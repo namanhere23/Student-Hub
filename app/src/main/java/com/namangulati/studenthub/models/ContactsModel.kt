@@ -5,5 +5,6 @@ import java.io.Serializable
 data class ContactsModel(
     val name: String,
     val email: String,
-    val uid:String
+    val uid:String,
+    var time: Long=0L
 ) :Serializable
