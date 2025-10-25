@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.compose.ui.window.application
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -16,6 +15,7 @@ import com.namangulati.studenthub.admin.AcceptOrRejectPapers
 import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Chat
+import com.namangulati.studenthub.userPages.ChatBot
 import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
 
@@ -51,6 +51,11 @@ object NavigationMenuLauncher {
                     auth.signOut()
                     val intent = Intent(activity, MainActivity::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    activity.startActivity(intent)
+                }
+                R.id.chatBot->{
+                    val intent=Intent(activity, ChatBot::class.java)
+                    intent.putExtra("EXTRA_USER_DETAILS", person)
                     activity.startActivity(intent)
                 }
             }

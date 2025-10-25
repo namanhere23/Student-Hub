@@ -21,6 +21,9 @@
         android:theme="@style/Theme.StudentHub"
         tools:targetApi="31">
         <activity
+            android:name=".userPages.ChatBot"
+            android:exported="false" />
+        <activity
             android:name=".admin.AcceptOrRejectPapers"
             android:exported="false" />
         <activity

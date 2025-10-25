@@ -3,6 +3,7 @@ package com.namangulati.studenthub
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +17,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
@@ -37,6 +39,7 @@ import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.userPages.Details_Page
 import com.namangulati.studenthub.utils.FirebaseLoginAuth
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
+import com.namangulati.studenthub.utils.PermissionsUtils.reqNotificationPermission
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -45,10 +48,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
     private lateinit var btnContinue: MaterialButton
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        reqNotificationPermission(this)
         val splashScreen = installSplashScreen()
         var isLoading = true
         splashScreen.setKeepOnScreenCondition { isLoading }

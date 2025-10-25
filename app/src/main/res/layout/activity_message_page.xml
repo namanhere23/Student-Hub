@@ -68,7 +68,6 @@
         android:layout_marginTop="20dp"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu">
-
-
     </com.google.android.material.navigation.NavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

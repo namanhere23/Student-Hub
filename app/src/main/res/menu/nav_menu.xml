@@ -1,14 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:title="Home"/>
+        android:title="Home" />
     <item
         android:id="@+id/nav_chat"
         android:title="Chats" />
     <item
         android:id="@+id/admin"
-        android:title="Admin"/>
+        android:title="Admin" />
     <item
         android:id="@+id/nav_logout"
         android:title="Logout" />
+    <item
+        android:id="@+id/chatBot"
+        android:title="ChatBot" />
 </menu>
