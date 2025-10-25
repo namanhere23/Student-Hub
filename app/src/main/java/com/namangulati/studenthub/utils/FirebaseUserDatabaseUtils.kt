@@ -6,7 +6,9 @@ import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
 import com.namangulati.studenthub.models.ContactsModel
+import com.namangulati.studenthub.models.Groups
 import com.namangulati.studenthub.models.UserDetailsModel
+import java.time.Instant
 
 object FirebaseUserDatabaseUtils {
 
@@ -47,7 +49,7 @@ object FirebaseUserDatabaseUtils {
         if (user.uid != null) {
             usersRef.child(user.uid!!).setValue(user)
                 .addOnFailureListener { e ->
-                    Toast.makeText(context, "Failed to save user: ${e.message}", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "Failed to save : ${e.message}", Toast.LENGTH_SHORT)
                         .show()
                     onResult(false)
                 }
@@ -88,7 +90,11 @@ object FirebaseUserDatabaseUtils {
             }
     }
 
-    fun loadAllChats(context: Context, currentUserUid: String, onResult: (List<ContactsModel>) -> Unit) {
+    fun loadAllChats(
+        context: Context,
+        currentUserUid: String,
+        onResult: (List<ContactsModel>) -> Unit
+    ) {
         if (FirebaseApp.getApps(context).isEmpty()) {
             FirebaseApp.initializeApp(context)
         }
@@ -96,6 +102,7 @@ object FirebaseUserDatabaseUtils {
         val database = FirebaseDatabase.getInstance()
         val usersChatsRef = database.getReference("usersChats").child(currentUserUid)
         val usersRef = database.getReference("users")
+        val groupRef = database.getReference("groups")
 
         usersChatsRef.get().addOnSuccessListener { chatPartnerSnapshots ->
             if (!chatPartnerSnapshots.exists()) {
@@ -112,30 +119,42 @@ object FirebaseUserDatabaseUtils {
                 }
             }
 
-            usersRef.get().addOnSuccessListener { allUsersSnapshot ->
-                val chatContactsList = mutableListOf<ContactsModel>()
-
-                val allUsersMap = mutableMapOf<String, UserDetailsModel>()
-                for (userSnap in allUsersSnapshot.children) {
-                    val user = userSnap.getValue(UserDetailsModel::class.java)
-                    if (user != null && user.uid != null) {
-                        allUsersMap[user.uid!!] = user
+            groupRef.get().addOnSuccessListener {
+                for (snap in it.children) {
+                    val partnerUid = snap.key
+                    val time = Instant.now().toEpochMilli()
+                    if (partnerUid != null) {
+                        chatPartnerMap[partnerUid] = time
                     }
                 }
 
-                for ((partnerUid, time) in chatPartnerMap) {
-                    val userDetails = allUsersMap[partnerUid]
-                    if (userDetails != null) {
-                        val contact = ContactsModel(
-                            name = userDetails.name!!,
-                            email = userDetails.email!!,
-                            uid = userDetails.uid!!,
-                            time = time
-                        )
-                        chatContactsList.add(contact)
+                usersRef.get().addOnSuccessListener { allUsersSnapshot ->
+                    val chatContactsList = mutableListOf<ContactsModel>()
+
+                    val allUsersMap = mutableMapOf<String, UserDetailsModel>()
+                    for (userSnap in allUsersSnapshot.children) {
+                        val user = userSnap.getValue(UserDetailsModel::class.java)
+                        if (user?.uid != null) {
+                            allUsersMap[user.uid!!] = user
+                        }
                     }
+
+                    for ((partnerUid, time) in chatPartnerMap) {
+                        val userDetails = allUsersMap[partnerUid]
+                        if (userDetails != null) {
+                            val contact = ContactsModel(
+                                name = userDetails.name!!,
+                                email = userDetails.email!!,
+                                uid = userDetails.uid!!,
+                                time = time
+                            )
+                            chatContactsList.add(contact)
+                        }
+                    }
+                    val sortedList = chatContactsList.sortedByDescending { it.time }
+                    onResult(sortedList)
                 }
-                onResult(chatContactsList)
+
 
             }.addOnFailureListener { e ->
                 Log.e("FirebaseUser", "Failed to read all users", e)
@@ -148,4 +167,46 @@ object FirebaseUserDatabaseUtils {
         }
     }
 
+    fun addGroups(context: Context, name: String, url: String, onResult: (Boolean) -> Unit) {
+        if (FirebaseApp.getApps(context).isEmpty()) {
+            FirebaseApp.initializeApp(context)
+        }
+
+        val database = FirebaseDatabase.getInstance()
+        val groupRef = database.getReference("groups")
+        val newGroupRef = groupRef.push()
+        val uid = newGroupRef.key
+
+        if (uid != null) {
+            var group = Groups(uid, arrayListOf())
+            groupRef.child(group.uid!!).setValue(group)
+                .addOnFailureListener { e ->
+                    Toast.makeText(
+                        context,
+                        "Failed to save group: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    onResult(false)
+                }
+
+                .addOnSuccessListener {
+                    saveUser(
+                        context,
+                        UserDetailsModel(
+                            name,
+                            "group$name@iiitl.ac.in",
+                            "0000000000",
+                            url,
+                            uid,
+                            arrayListOf(),
+                            "group"
+                        )
+                    ) {
+                        onResult(true)
+                    }
+
+                }
+        }
+    }
 }

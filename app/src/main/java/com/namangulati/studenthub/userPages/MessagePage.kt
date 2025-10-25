@@ -1,6 +1,8 @@
 package com.namangulati.studenthub.userPages
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.util.Log
 import android.util.TimeUtils
@@ -52,13 +54,25 @@ class MessagePage : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.title = name
-        getOfflineOnlineStatus(this, ruid!!) { status ->
-            val color = if (status == "Online") "#00FF00" else "#FF0000"
-            supportActionBar?.subtitle = Html.fromHtml(
-                "<font color='$color'>$status</font>",
-                Html.FROM_HTML_MODE_LEGACY
-            )
+
+        val handler = Handler(Looper.getMainLooper())
+        val interval = 5000L
+        val runnable = object : Runnable {
+            override fun run() {
+                getOfflineOnlineStatus(this@MessagePage, ruid!!) { status ->
+                    val color = if (status == "Online") "#00FF00" else "#FF0000"
+                    supportActionBar?.subtitle = Html.fromHtml(
+                        "<font color='$color'>$status</font>",
+                        Html.FROM_HTML_MODE_LEGACY
+                    )
+                }
+                handler.postDelayed(this, interval)
+            }
         }
+
+        handler.post(runnable)
+
+
 
         recyclerMessages = findViewById(R.id.recyclerMessages)
         etMessage = findViewById(R.id.etMessage)
@@ -74,7 +88,7 @@ class MessagePage : AppCompatActivity() {
         val chats = database.getReference("chats")
         val usersChats = database.getReference("usersChats")
 
-        loadUserByUid(this, ruid) { user ->
+        loadUserByUid(this, ruid!!) { user ->
             if (user == null) {
                 Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
                 finish()

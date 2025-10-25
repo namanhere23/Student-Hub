@@ -9,14 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.graphics.vector.Group
 import androidx.lifecycle.ViewModelProvider
 import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.databinding.FragmentNewGroupBinding
 import com.namangulati.studenthub.databinding.FragmentUploadBinding
+import com.namangulati.studenthub.models.Groups
 import com.namangulati.studenthub.models.NotConfirmedPapersModel
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.utils.FirebasePapersDatabaseUtils
+import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils.addGroups
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils.saveUser
 import com.namangulati.studenthub.utils.MediaUploadUtils.uploadDocumentToServer
 
@@ -54,15 +57,13 @@ class NewGroupFragment : Fragment() {
 
         binding.Submit.setOnClickListener{
             if(!uploadedUrl.isNullOrEmpty()){
-                val user=UserDetailsModel(name.text.toString(),"group${name.text.toString()}@iiitl.ac.in","0000000000",uploadedUrl,null,
-                    arrayListOf(),"group")
                 try{
-                    Log.d("Hello1",user.email.toString())
-                    saveUser(requireContext(),user){
-                        name.text.clear()
-                        uploadedUrl=""
-                        Toast.makeText(requireContext(),"Group Created",Toast.LENGTH_SHORT).show()
-                    } } catch (error:Error){
+                    addGroups(requireContext(),name.text.toString(),uploadedUrl ){
+                            name.text.clear()
+                            uploadedUrl=""
+                            Toast.makeText(requireContext(),"Group Created",Toast.LENGTH_SHORT).show()
+                    }
+                     } catch (error:Error){
                     Toast.makeText(requireContext(),"Group Not Created",Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }
