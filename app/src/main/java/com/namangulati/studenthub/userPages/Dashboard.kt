@@ -1,7 +1,9 @@
 package com.namangulati.studenthub.userPages
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -56,6 +58,8 @@ class Dashboard : AppCompatActivity() {
             val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerOrders)
             recyclerView.layoutManager = LinearLayoutManager(this)
             val adapter = PapersAdapter(this, papers)
+            val progressBar=findViewById<ProgressBar>(R.id.progressBar)
+            progressBar.visibility=View.GONE
             recyclerView.adapter = adapter
         }
     }

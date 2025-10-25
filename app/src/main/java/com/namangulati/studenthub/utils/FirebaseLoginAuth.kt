@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.userPages.Details_Page
@@ -69,6 +70,7 @@ object FirebaseLoginAuth {
                                         activity,
                                         profile
                                     ) { success ->
+                                        (activity.application as OnlineOfflineStatus).startPresenceListener()
                                         val intent = if (finalMobile?.length != 10) {
                                             Intent(activity, Details_Page::class.java)
                                         } else {
@@ -108,6 +110,7 @@ object FirebaseLoginAuth {
                 if (user != null) {
                     if (user.isEmailVerified) {
                         Toast.makeText(activity, "Login successful!", Toast.LENGTH_SHORT).show()
+                        (activity.application as OnlineOfflineStatus).startPresenceListener()
                         val intent=Intent(activity,Details_Page::class.java)
                         activity.startActivity(intent)
                         activity.finish()

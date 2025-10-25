@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.ui.window.application
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -11,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.namangulati.studenthub.MainActivity
 import com.namangulati.studenthub.R
+import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Chat
 import com.namangulati.studenthub.userPages.Dashboard
@@ -43,6 +45,7 @@ object NavigationMenuLauncher {
                     if (FirebaseApp.getApps(activity).isEmpty()) {
                         FirebaseApp.initializeApp(activity)
                     }
+                    (activity.application as OnlineOfflineStatus).stopPresenceListener()
                     val auth = FirebaseAuth.getInstance()
                     auth.signOut()
                     val intent = Intent(activity, MainActivity::class.java)

@@ -44,11 +44,8 @@ class Chat : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-
         val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as UserDetailsModel
         launchNavigationMenu(this, person)
-
 
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
         progressBar.visibility = View.VISIBLE

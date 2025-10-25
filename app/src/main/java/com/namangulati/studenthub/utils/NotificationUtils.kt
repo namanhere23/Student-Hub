@@ -47,7 +47,7 @@ object NotificationUtils {
         }
     }
 
-    fun NotificationHighPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
+    fun notificationHighPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
         val pendingIntent=createPendingIntent(context,activity)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(title)
@@ -62,7 +62,7 @@ object NotificationUtils {
         notificationManager.notify(0,notification)
     }
 
-    fun NotificationDefaultPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
+    fun notificationDefaultPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
         val pendingIntent=createPendingIntent(context,activity)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(title)
@@ -77,7 +77,7 @@ object NotificationUtils {
         notificationManager.notify(0,notification)
     }
 
-    fun NotificationLowPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
+    fun notificationLowPriority(activity: Class<out Activity>,context:Context,title:String,text:String){
         val pendingIntent=createPendingIntent(context,activity)
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(title)

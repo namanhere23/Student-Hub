@@ -28,7 +28,10 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.userPages.Details_Page
@@ -57,6 +60,18 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserUid != null) {
+                    val database = FirebaseDatabase.getInstance().getReference("userTokens")
+                    database.child(currentUserUid).setValue(token)
+                }
+            }
+        }
+
+
         val progressBar=findViewById<ProgressBar>(R.id.progressBar)
 
         auth = Firebase.auth
@@ -67,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                     if (user != null) {
                         val userDetails = UserDetailsModel(user.name?: "", currentUser.email ?: "", user.mobile?: "", user.photo?: "", user.uid, user.groups?: arrayListOf())
                         if (user.mobile?.length!=10) {
+                            (application as OnlineOfflineStatus).startPresenceListener()
                             Intent(this, Details_Page::class.java).apply {
                                 putExtra("EXTRA_USER_DETAILS", userDetails)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -74,6 +90,7 @@ class MainActivity : AppCompatActivity() {
                                 startActivity(this)
                             }
                         } else {
+                            (application as OnlineOfflineStatus).startPresenceListener()
                             Intent(this, Dashboard::class.java).apply {
                                 putExtra("EXTRA_USER_DETAILS", userDetails)
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -85,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 
                     else
                     {
+                        (application as OnlineOfflineStatus).startPresenceListener()
                         val userDetails = UserDetailsModel( "",  "", "", "", uid, arrayListOf())
                         Intent(this, Details_Page::class.java).apply {
                             putExtra("EXTRA_USER_DETAILS", userDetails)
@@ -130,6 +148,7 @@ class MainActivity : AppCompatActivity() {
 
             FirebaseLoginAuth.checkIfUserExists(this,etEmail.text.toString(), etPassword.text.toString())
             progressBar.visibility = View.GONE
+            (application as OnlineOfflineStatus).startPresenceListener()
         }
 
         val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
