@@ -29,7 +29,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:letterSpacing=".7"
-                android:text="-------------------\n Papers\n-------------------"
+                android:text="-------------------\n Admin\n-------------------"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -37,18 +37,39 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="end">
+
+            <ImageView
+                android:id="@+id/AddGroups"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/baseline_group_add_24" />
+
             <ImageView
                 android:id="@+id/UploadPhoto"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
                 android:layout_gravity="end"
                 android:layout_marginEnd="20dp"
                 android:src="@drawable/baseline_upload_file_24" />
 
+            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/Upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@+id/Group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -62,6 +83,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="12dp"/>
+
+
         </LinearLayout>
 
     </ScrollView>

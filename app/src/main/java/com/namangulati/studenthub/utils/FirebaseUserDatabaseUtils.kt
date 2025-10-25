@@ -36,6 +36,13 @@ object FirebaseUserDatabaseUtils {
 
         val database = FirebaseDatabase.getInstance()
         val usersRef = database.getReference("users")
+        val newRef = if (user.uid != null) {
+            usersRef.child(user.uid!!)
+        } else {
+            usersRef.push()
+        }
+
+        user.uid = newRef.key
 
         if (user.uid != null) {
             usersRef.child(user.uid!!).setValue(user)
@@ -81,11 +88,7 @@ object FirebaseUserDatabaseUtils {
             }
     }
 
-    fun loadAllChats(
-        context: Context,
-        currentUserUid: String,
-        onResult: (List<ContactsModel>) -> Unit
-    ) {
+    fun loadAllChats(context: Context, currentUserUid: String, onResult: (List<ContactsModel>) -> Unit) {
         if (FirebaseApp.getApps(context).isEmpty()) {
             FirebaseApp.initializeApp(context)
         }

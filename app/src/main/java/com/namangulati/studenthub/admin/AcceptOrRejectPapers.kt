@@ -14,6 +14,7 @@ import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.AcceptOrRejectPapersAdapter
 import com.namangulati.studenthub.adapters.PapersAdapter
+import com.namangulati.studenthub.fragments.NewGroupFragment
 import com.namangulati.studenthub.fragments.UploadFragment
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
@@ -53,8 +54,28 @@ class AcceptOrRejectPapers : AppCompatActivity() {
                 }
                 state=0
             }
-
         }
+
+        val group=NewGroupFragment()
+        var state1=0
+        val addGroups=findViewById<ImageView>(R.id.AddGroups)
+        addGroups.setOnClickListener{
+            if(state1%2==0) {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.Group, group)
+                    commit()
+                }
+                state1=1
+            } else {
+                supportFragmentManager.beginTransaction().apply {
+                    remove(upload)
+                    commit()
+                }
+                state=0
+            }
+        }
+
+
         FirebasePapersDatabaseUtils.loadAllUnconfirmedPapers(this) { papers ->
             val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerOrders)
             recyclerView.layoutManager = LinearLayoutManager(this)

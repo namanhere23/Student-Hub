@@ -44,7 +44,7 @@ object FcmUtilits {
             val messageDTO = SentMessageDTO(
                 to = "/topics/all",
                 notification = NotificationBody(
-                    title = "New Broadcast!",
+                    title = "Notification!",
                     body = messageText
                 )
             )
