@@ -1,13 +1,11 @@
     package com.namangulati.studenthub.utils
 
-    import android.util.Log
     import com.google.firebase.auth.FirebaseAuth
     import com.google.firebase.database.FirebaseDatabase
     import com.google.firebase.messaging.FirebaseMessagingService
     import com.google.firebase.messaging.RemoteMessage
-    import com.namangulati.studenthub.API.FcmUtilits
     import com.namangulati.studenthub.userPages.MessagePage
-    import com.namangulati.studenthub.utils.NotificationUtils.notificationDefaultPriority
+    import com.namangulati.studenthub.utils.NotificationUtils.notificationHighPriority
 
     class PushNotificationService: FirebaseMessagingService() {
         override fun onNewToken(token: String) {
@@ -29,6 +27,6 @@
         }
 
         private fun sendNotification(title: String, messageBody: String) {
-            notificationDefaultPriority(MessagePage::class.java,this,title,messageBody)
+            notificationHighPriority(MessagePage::class.java,this,title,messageBody)
         }
     }

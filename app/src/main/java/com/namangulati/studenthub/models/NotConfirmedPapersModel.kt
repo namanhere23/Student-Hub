@@ -8,5 +8,6 @@ data class NotConfirmedPapersModel(
     var year: Int? = null,
     var exam: String? = null,
     var link: String? = null,
-    var email:String?= null
+    var email:String?= null,
+    var key:String?=null
 ) : Serializable

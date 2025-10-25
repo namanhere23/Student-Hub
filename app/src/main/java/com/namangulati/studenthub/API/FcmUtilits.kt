@@ -42,7 +42,7 @@ object FcmUtilits {
     fun sendBroadcastMessage(messageText: String) {
         coroutineScope.launch {
             val messageDTO = SentMessageDTO(
-                to = null,
+                to = "/topics/all",
                 notification = NotificationBody(
                     title = "New Broadcast!",
                     body = messageText

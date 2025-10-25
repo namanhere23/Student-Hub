@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,39 +8,78 @@
     android:padding="12dp"
     android:background="@drawable/bg_card">
 
+    <ImageView
+        android:id="@+id/tick"
+        android:visibility="gone"
+        android:layout_width="42dp"
+        android:layout_height="36dp"
+        android:layout_gravity="end"
+        android:src="@drawable/tick"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.799"
+        app:layout_constraintStart_toEndOf="@+id/tvSemester"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.222" />
+
+    <ImageView
+        android:id="@+id/cross"
+        android:layout_width="42dp"
+        android:visibility="gone"
+        android:layout_height="36dp"
+        android:layout_gravity="end"
+        android:layout_marginEnd="4dp"
+        android:src="@drawable/cross"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tick"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.222" />
+
     <TextView
         android:id="@+id/tvSubject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Subject: "
         android:textColor="@color/black"
-        android:text="Subject: " />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSemester"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Semester: "
         android:textColor="@color/black"
-        android:text="Semester: " />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubject" />
 
     <TextView
         android:id="@+id/tvYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Year: "
         android:textColor="@color/black"
-        android:text="Year: "  />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSemester" />
 
     <TextView
         android:id="@+id/tvExam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Exam: "
         android:textColor="@color/black"
-        android:text="Exam: " />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvYear" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tvExam"
+        tools:layout_editor_absoluteX="12dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/materialButton2"
@@ -69,5 +108,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

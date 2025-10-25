@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
+
         val progressBar=findViewById<ProgressBar>(R.id.progressBar)
 
         auth = Firebase.auth

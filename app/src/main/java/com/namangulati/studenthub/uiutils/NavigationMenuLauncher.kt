@@ -12,6 +12,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.namangulati.studenthub.MainActivity
 import com.namangulati.studenthub.R
+import com.namangulati.studenthub.admin.AcceptOrRejectPapers
 import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Chat
@@ -37,7 +38,7 @@ object NavigationMenuLauncher {
                     activity.startActivity(intent)
                 }
                 R.id.admin -> {
-                    val intent=Intent(activity, Dashboard::class.java)
+                    val intent=Intent(activity, AcceptOrRejectPapers::class.java)
                     intent.putExtra("EXTRA_USER_DETAILS", person)
                     activity.startActivity(intent)
                 }
