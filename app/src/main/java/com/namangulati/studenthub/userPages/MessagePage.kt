@@ -49,6 +49,7 @@ class MessagePage : AppCompatActivity() {
         val name = intent.getStringExtra("contact")
         val ruid = intent.getStringExtra("uid")
         val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as UserDetailsModel
+        val mobile=intent.getStringExtra("mobile") as String
         launchNavigationMenu(this, person)
         senderRoom = ruid + person.uid
         receiverRoom = person.uid + ruid
@@ -73,16 +74,12 @@ class MessagePage : AppCompatActivity() {
 
         handler.post(runnable)
 
-        if (ruid != null) {
-            loadUserByUid(this,ruid){
-                if(it?.mobile!="0000000000") {
-                    findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).setOnClickListener {
-                        Intent(this, ChatUserProfile::class.java).also {
-                            it.putExtra("uid", ruid)
-                            it.putExtra("EXTRA_USER_DETAILS", person)
-                            startActivity(it)
-                        }
-                    }
+        if (mobile != "0000000000") {
+            findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).setOnClickListener {
+                Intent(this, ChatUserProfile::class.java).also {
+                    it.putExtra("uid", ruid)
+                    it.putExtra("EXTRA_USER_DETAILS", person)
+                    startActivity(it)
                 }
             }
         }

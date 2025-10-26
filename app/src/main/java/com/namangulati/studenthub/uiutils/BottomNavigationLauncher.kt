@@ -13,6 +13,7 @@ import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Chat
 import com.namangulati.studenthub.userPages.ChatBot
 import com.namangulati.studenthub.userPages.Dashboard
+import com.namangulati.studenthub.userPages.Details_Page
 
 object BottomNavigationLauncher {
     fun launchNavigationMenuBottom(activity: Activity, person: UserDetailsModel) {
@@ -56,14 +57,9 @@ object BottomNavigationLauncher {
                         activity.startActivity(intent)
                     }
 
-                    R.id.nav_logout -> {
-                        if (FirebaseApp.getApps(activity).isEmpty()) {
-                            FirebaseApp.initializeApp(activity)
-                        }
-                        (activity.application as OnlineOfflineStatus).stopPresenceListener()
-                        FirebaseAuth.getInstance().signOut()
-                        val intent = Intent(activity, MainActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    R.id.nav_profile -> {
+                        val intent = Intent(activity, Details_Page::class.java)
+                        intent.putExtra("EXTRA_USER_DETAILS", person)
                         activity.startActivity(intent)
                     }
                 }

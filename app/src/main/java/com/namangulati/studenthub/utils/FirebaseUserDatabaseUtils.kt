@@ -96,8 +96,21 @@ object FirebaseUserDatabaseUtils {
                     }
                     val contactsList = mutableListOf<ContactsModel>()
                     for (user in userList) {
-                        val contact = ContactsModel(user.name!!, user.email!!, user.uid!!)
-                        contactsList.add(contact)
+                        val contact =
+                            user.name?.let { it1 -> user.email?.let { it2 ->
+                                user.uid?.let { it3 ->
+                                    user.mobile?.let { it4 ->
+                                        user.photo?.let { it5 ->
+                                            ContactsModel(it1,
+                                                it2, it3, it4, it5
+                                            )
+                                        }
+                                    }
+                                }
+                            } }
+                        if (contact != null) {
+                            contactsList.add(contact)
+                        }
                     }
                     onResult(contactsList)
                 }
@@ -178,7 +191,9 @@ object FirebaseUserDatabaseUtils {
                                     name = userDetails.name!!,
                                     email = userDetails.email!!,
                                     uid = userDetails.uid!!,
-                                    time = time
+                                    time = time,
+                                    mobile = userDetails.mobile!!,
+                                    url = userDetails.photo!!
                                 )
                                 chatContactsList.add(contact)
                             }

@@ -106,20 +106,27 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
         <Button
             android:id="@+id/UploadDoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#5A5AC1"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:text="Click to Upload Documnent" />
+            android:text="Click to Upload Documnent"
+            android:textColor="@color/white" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/Submit"
