@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.PapersAdapter
+import com.namangulati.studenthub.fragments.ProfileFragment
 import com.namangulati.studenthub.fragments.UploadFragment
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
@@ -36,6 +37,16 @@ class Dashboard : AppCompatActivity() {
 
         val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as UserDetailsModel
         NavigationMenuLauncher.launchNavigationMenu(this,person)
+
+        val panel = ProfileFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable("EXTRA_USER_DETAILS", person)
+            }
+        }
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.topPanel, panel)
+            commit()
+        }
 
         val upload= UploadFragment()
         var state=0

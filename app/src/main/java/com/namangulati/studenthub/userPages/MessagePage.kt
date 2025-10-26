@@ -22,6 +22,7 @@ import com.namangulati.studenthub.API.FcmApi
 import com.namangulati.studenthub.API.FcmUtilits
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.MessageAdapter
+import com.namangulati.studenthub.fragments.ProfileFragment
 import com.namangulati.studenthub.models.Message
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher.launchNavigationMenu
@@ -52,7 +53,6 @@ class MessagePage : AppCompatActivity() {
         senderRoom = ruid + person.uid
         receiverRoom = person.uid + ruid
         messageList = ArrayList()
-
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.title = name
 
