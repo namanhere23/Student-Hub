@@ -8,10 +8,16 @@
     tools:context=".admin.AcceptOrRejectPapers"
     android:fitsSystemWindows="true">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
     <ScrollView
         android:id="@+id/ScrollViewFoodPage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <LinearLayout
@@ -94,6 +100,15 @@
         </LinearLayout>
 
     </ScrollView>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/nav_menu"
+            app:labelVisibilityMode="labeled"
+            android:background="@color/black"
+            app:itemTextColor="@color/white"/>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"

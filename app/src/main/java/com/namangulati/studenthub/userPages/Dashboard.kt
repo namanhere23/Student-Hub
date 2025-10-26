@@ -18,6 +18,7 @@ import com.namangulati.studenthub.adapters.PapersAdapter
 import com.namangulati.studenthub.fragments.ProfileFragment
 import com.namangulati.studenthub.fragments.UploadFragment
 import com.namangulati.studenthub.models.UserDetailsModel
+import com.namangulati.studenthub.uiutils.BottomNavigationLauncher.launchNavigationMenuBottom
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
 import com.namangulati.studenthub.utils.FirebasePapersDatabaseUtils
 import com.namangulati.studenthub.utils.PermissionsUtils.reqNotificationPermission
@@ -37,6 +38,7 @@ class Dashboard : AppCompatActivity() {
 
         val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as UserDetailsModel
         NavigationMenuLauncher.launchNavigationMenu(this,person)
+        launchNavigationMenuBottom(this,person)
 
         val panel = ProfileFragment().apply {
             arguments = Bundle().apply {

@@ -14,11 +14,23 @@
         android:background="@color/white"
         android:orientation="vertical">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
         <FrameLayout
             android:id="@+id/topPanel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp" />
+
+
 
         <androidx.appcompat.widget.SearchView
             android:layout_marginTop="10dp"
@@ -61,6 +73,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="gone" />
+
+            </LinearLayout>
+
+        </ScrollView>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/nav_menu"
+            app:labelVisibilityMode="labeled"
+            android:background="@color/black"
+            app:itemTextColor="@color/white"/>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -70,9 +94,9 @@
         android:layout_gravity="start"
         android:layout_marginTop="20dp"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu">
+        app:menu="@menu/nav_menu"/>
 
 
-    </com.google.android.material.navigation.NavigationView>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

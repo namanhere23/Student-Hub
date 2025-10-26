@@ -18,6 +18,7 @@ import androidx.appcompat.widget.SearchView
 import com.namangulati.studenthub.fragments.ProfileFragment
 import com.namangulati.studenthub.models.ContactsModel
 import com.namangulati.studenthub.models.UserDetailsModel
+import com.namangulati.studenthub.uiutils.BottomNavigationLauncher.launchNavigationMenuBottom
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher.launchNavigationMenu
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils.loadAllChats
@@ -47,6 +48,7 @@ class Chat : AppCompatActivity() {
         }
         val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as UserDetailsModel
         launchNavigationMenu(this, person)
+        launchNavigationMenuBottom(this,person)
 
         val panel = ProfileFragment().apply {
             arguments = Bundle().apply {

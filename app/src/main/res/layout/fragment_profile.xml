@@ -11,14 +11,14 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="30dp"
+        android:layout_marginHorizontal="20dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="30dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_margin="20dp"
             android:gravity="center"
             android:text="Student Hub"
@@ -31,7 +31,7 @@
         <ImageView
             android:id="@+id/profilePic"
             android:layout_width="50dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_gravity="end"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile_pic"
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:textColor="@color/black"
-            android:layout_margin="16dp"
+            android:layout_marginHorizontal="16dp"
             android:layout_weight="1"
             android:backgroundTint="@color/white"
             android:text="AI Assistant"
