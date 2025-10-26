@@ -56,10 +56,24 @@ class NewGroupFragment : Fragment() {
         }
 
         binding.Submit.setOnClickListener{
+            val group=binding.tvGroup.text
+            val groups=arrayListOf<String>()
+            var groupsString=""
+            for(ele in group){
+                if(ele==','){
+                    groups.add(groupsString)
+                    groupsString=""
+                } else {
+                    groupsString+=ele
+                }
+            }
+            groups.add(groupsString)
+
             if(!uploadedUrl.isNullOrEmpty()){
                 try{
-                    addGroups(requireContext(),name.text.toString(),uploadedUrl ){
+                    addGroups(requireContext(),name.text.toString(),uploadedUrl,groups){
                             name.text.clear()
+                            binding.tvGroup.text.clear()
                             uploadedUrl=""
                             Toast.makeText(requireContext(),"Group Created",Toast.LENGTH_SHORT).show()
                     }

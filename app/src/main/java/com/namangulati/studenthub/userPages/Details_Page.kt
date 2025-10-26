@@ -59,8 +59,9 @@ class Details_Page : AppCompatActivity() {
                     etMobileDetails.setText(user.mobile ?: "")
 
                     if (!user.photo.isNullOrEmpty()) {
+                        val imageUrl = user.photo?.replace("http://", "https://")
                         Glide.with(this)
-                            .load(user.photo)
+                            .load(imageUrl)
                             .into(profileImage)
                         profileImageUrl=user.photo
                     } else {
@@ -105,11 +106,26 @@ class Details_Page : AppCompatActivity() {
             }
 
             if (etName.text.toString().isEmpty()) {
-                Toast.makeText(this, "Please enter Name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter  Name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val userDetails= UserDetailsModel(etName.text.toString(),etemail.text.toString(), etMobileDetails.text.toString(),profileImageUrl,person?.uid,person?.groups?: arrayListOf())
+            val groups=person?.groups
+            val year=etemail.text.toString().slice(3..6)
+            if (groups != null) {
+                if(!(groups.contains(year))){
+                    groups.add(year)
+                }
+                if(!(groups.contains("0000"))){
+                    groups.add(year)
+                }
+            }
+
+            else{
+                groups?.add(year)
+            }
+
+            val userDetails= UserDetailsModel(etName.text.toString(),etemail.text.toString(), etMobileDetails.text.toString(),profileImageUrl,person?.uid,groups?: arrayListOf())
             Log.d("Hello7",userDetails.photo.toString())
             FirebaseUserDatabaseUtils.saveUser(this,userDetails) { success ->
                 if (success) {

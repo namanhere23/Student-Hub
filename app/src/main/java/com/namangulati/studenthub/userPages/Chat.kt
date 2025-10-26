@@ -63,21 +63,23 @@ class Chat : AppCompatActivity() {
         contactRecyclerView.layoutManager = LinearLayoutManager(this)
         contactRecyclerView.adapter = adapter
 
-        loadAllUsers(this) { contactsList ->
-            val list = mutableListOf<ContactsModel>()
-            for (contact in contactsList) {
-                if (contact.email == person.email) {
-                    continue
-                } else {
-                    list.add(contact)
+        person.uid?.let {
+            loadAllUsers(this, it) { contactsList ->
+                val list = mutableListOf<ContactsModel>()
+                for (contact in contactsList) {
+                    if (contact.email == person.email) {
+                        continue
+                    } else {
+                        list.add(contact)
+                    }
                 }
+                contactList.clear()
+                contactList.addAll(list)
+                displayedContactList.clear()
+                displayedContactList.addAll(contactList)
+                adapter.notifyDataSetChanged()
+                progressBar.visibility = View.GONE
             }
-            contactList.clear()
-            contactList.addAll(list)
-            displayedContactList.clear()
-            displayedContactList.addAll(contactList)
-            adapter.notifyDataSetChanged()
-            progressBar.visibility = View.GONE
         }
 
         chatList = ArrayList()
