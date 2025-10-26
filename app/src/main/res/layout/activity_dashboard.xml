@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".userPages.Dashboard"
+    android:configChanges="uiMode|orientation|screenSize"
     android:fitsSystemWindows="true"
     >
 
@@ -85,9 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/nav_menu"
-            app:labelVisibilityMode="labeled"
-            android:background="@color/black"
-            app:itemTextColor="@color/white"/>
+            app:labelVisibilityMode="labeled" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

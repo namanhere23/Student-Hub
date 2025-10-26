@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.util.Log
-import android.util.TimeUtils
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
@@ -18,18 +17,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.namangulati.studenthub.API.FcmApi
 import com.namangulati.studenthub.API.FcmUtilits
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.MessageAdapter
-import com.namangulati.studenthub.fragments.ProfileFragment
 import com.namangulati.studenthub.models.Message
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher.launchNavigationMenu
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils.loadUserByUid
-import com.namangulati.studenthub.utils.GetOfflineOnlineStatus
 import com.namangulati.studenthub.utils.GetOfflineOnlineStatus.getOfflineOnlineStatus
-import retrofit2.Retrofit
 import java.time.Instant
 
 class MessagePage : AppCompatActivity() {

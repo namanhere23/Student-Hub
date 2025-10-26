@@ -57,6 +57,7 @@ class ContactsAdapter(
             intent.putExtra("contact", contact.name)
             intent.putExtra("uid",contact.uid)
             intent.putExtra("mobile",contact.mobile)
+            intent.putExtra("imageUrl",imageUrl)
             intent.putExtra("EXTRA_USER_DETAILS", currentUser)
             context.startActivity(intent)
         }

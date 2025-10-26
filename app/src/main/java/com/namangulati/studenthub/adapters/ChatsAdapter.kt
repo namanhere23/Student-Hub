@@ -69,6 +69,7 @@ class ChatsAdapter (
             val intent= Intent(context, MessagePage::class.java)
             intent.putExtra("contact", contact.name)
             intent.putExtra("uid",contact.uid)
+            intent.putExtra("imageUrl",imageUrl)
             intent.putExtra("mobile",contact.mobile)
             intent.putExtra("EXTRA_USER_DETAILS", currentUser)
             context.startActivity(intent)

@@ -12,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.PapersAdapter
@@ -72,13 +73,15 @@ class Dashboard : AppCompatActivity() {
             }
 
         }
-        FirebasePapersDatabaseUtils.loadAllPapers(this) { papers ->
-            val recyclerView = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerOrders)
+        val viewDModel = ViewModelProvider(this)[DashboardViewModel::class.java]
+
+        viewDModel.loadPapers(this)
+
+        viewDModel.papers.observe(this) { papers ->
+            val recyclerView = findViewById<RecyclerView>(R.id.recyclerOrders)
             recyclerView.layoutManager = LinearLayoutManager(this)
-            val adapter = PapersAdapter(this, papers)
-            val progressBar=findViewById<ProgressBar>(R.id.progressBar)
-            progressBar.visibility=View.GONE
-            recyclerView.adapter = adapter
+            recyclerView.adapter = PapersAdapter(this, papers)
+            findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
         }
     }
 }

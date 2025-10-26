@@ -3,8 +3,11 @@ package com.namangulati.studenthub.userPages
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -60,8 +63,9 @@ class Chat : AppCompatActivity() {
             commit()
         }
 
+
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        progressBar.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
 
         val progressBar1 = findViewById<ProgressBar>(R.id.progressBar1)
         progressBar1.visibility = View.VISIBLE
@@ -91,6 +95,8 @@ class Chat : AppCompatActivity() {
                 displayedContactList.clear()
                 displayedContactList.addAll(contactList)
                 adapter.notifyDataSetChanged()
+                val params = contactRecyclerView.layoutParams
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT
                 progressBar.visibility = View.GONE
             }
         }
@@ -109,6 +115,9 @@ class Chat : AppCompatActivity() {
             displayedChatList.addAll(sortedList)
 
             adapter1.notifyDataSetChanged()
+
+            val params = recyclerChatsView.layoutParams
+            params.height = ViewGroup.LayoutParams.MATCH_PARENT
             progressBar1.visibility = View.GONE
         }
 
@@ -145,6 +154,14 @@ class Chat : AppCompatActivity() {
             }
 
         })
+
+        val pic=findViewById<TextView>(R.id.openContacts)
+        pic.setOnClickListener{
+            pic.visibility=View.GONE
+            searchView.visibility=View.VISIBLE
+            contactRecyclerView.visibility=View.VISIBLE
+        }
+
 
     }
 

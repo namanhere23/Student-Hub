@@ -28,30 +28,36 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val person = arguments?.getSerializable("EXTRA_USER_DETAILS") as? UserDetailsModel
         val profilePic = view.findViewById<ImageView>(R.id.profilePic)
-        loadUserByUid(requireContext(), person?.uid!!) { user ->
-            if (user != null) {
-                if (!user.photo.isNullOrEmpty()) {
-                    val imageUrl = user.photo?.replace("http://", "https://")
-                    Glide.with(requireContext())
-                        .load(imageUrl)
-                        .into(profilePic)
-                } else {
-                    profilePic.setImageResource(R.drawable.ic_profile_pic)
-                }
-            }
+        if(person!=null) {
+            person.uid?.let {
+                loadUserByUid(requireContext(), it) { user ->
+                    if (!isAdded || view == null) return@loadUserByUid
 
-            profilePic.setOnClickListener {
-                Intent(requireContext(), Details_Page::class.java).also {
-                    it.putExtra("EXTRA_USER_DETAILS", person)
-                    startActivity(it)
-                }
-            }
+                    if (user != null) {
+                        if (!user.photo.isNullOrEmpty()) {
+                            val imageUrl = user.photo?.replace("http://", "https://")
+                            Glide.with(requireContext())
+                                .load(imageUrl)
+                                .into(profilePic)
+                        } else {
+                            profilePic.setImageResource(R.drawable.ic_profile_pic)
+                        }
+                    }
 
-            val btnChatbot = view?.findViewById<MaterialButton>(R.id.btnChatbot)
-            btnChatbot?.setOnClickListener {
-                val intent = Intent(requireContext(), ChatBot::class.java)
-                intent.putExtra("EXTRA_USER_DETAILS", person)
-                startActivity(intent)
+                    profilePic.setOnClickListener {
+                        Intent(requireContext(), Details_Page::class.java).also {
+                            it.putExtra("EXTRA_USER_DETAILS", person)
+                            startActivity(it)
+                        }
+                    }
+
+                    val btnChatbot = view.findViewById<MaterialButton>(R.id.btnChatbot)
+                    btnChatbot?.setOnClickListener {
+                        val intent = Intent(requireContext(), ChatBot::class.java)
+                        intent.putExtra("EXTRA_USER_DETAILS", person)
+                        startActivity(intent)
+                    }
+                }
             }
         }
 
