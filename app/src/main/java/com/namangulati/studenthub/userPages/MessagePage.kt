@@ -1,5 +1,6 @@
 package com.namangulati.studenthub.userPages
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -72,6 +73,19 @@ class MessagePage : AppCompatActivity() {
 
         handler.post(runnable)
 
+        if (ruid != null) {
+            loadUserByUid(this,ruid){
+                if(it?.mobile!="0000000000") {
+                    findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar).setOnClickListener {
+                        Intent(this, ChatUserProfile::class.java).also {
+                            it.putExtra("uid", ruid)
+                            it.putExtra("EXTRA_USER_DETAILS", person)
+                            startActivity(it)
+                        }
+                    }
+                }
+            }
+        }
 
 
         recyclerMessages = findViewById(R.id.recyclerMessages)

@@ -117,15 +117,11 @@ class Details_Page : AppCompatActivity() {
                     groups.add(year)
                 }
                 if(!(groups.contains("0000"))){
-                    groups.add(year)
+                    groups.add("0000")
                 }
             }
 
-            else{
-                groups?.add(year)
-            }
-
-            val userDetails= UserDetailsModel(etName.text.toString(),etemail.text.toString(), etMobileDetails.text.toString(),profileImageUrl,person?.uid,groups?: arrayListOf())
+            val userDetails= UserDetailsModel(etName.text.toString(),etemail.text.toString(), etMobileDetails.text.toString(),profileImageUrl,person?.uid,groups?: arrayListOf(),"Online")
             Log.d("Hello7",userDetails.photo.toString())
             FirebaseUserDatabaseUtils.saveUser(this,userDetails) { success ->
                 if (success) {
