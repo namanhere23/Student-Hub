@@ -5,8 +5,16 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.FirebaseDatabase
+import com.namangulati.studenthub.Dao.PapersDao
+import com.namangulati.studenthub.Database.PapersDatabase
 import com.namangulati.studenthub.models.NotConfirmedPapersModel
 import com.namangulati.studenthub.models.PapersModel
+import androidx.lifecycle.lifecycleScope
+import com.namangulati.studenthub.modelsRoom.PapersModelRoom
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 object FirebasePapersDatabaseUtils {
 
@@ -110,5 +118,9 @@ object FirebasePapersDatabaseUtils {
             }
     }
 
+    suspend fun loadPapersFromRoom(context:Context): List<PapersModelRoom>{
+        val dao = PapersDatabase.getInstance(context).dao
+        return dao.getAllPapers().first()
+    }
 
 }

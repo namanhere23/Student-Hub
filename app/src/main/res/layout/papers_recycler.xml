@@ -6,12 +6,12 @@
     android:orientation="vertical"
     android:layout_margin="10dp"
     android:padding="12dp"
-    android:backgroundTint="#141414"
+    android:backgroundTint="#161616"
     android:background="@drawable/bg_card">
 
     <ImageView
         android:id="@+id/tick"
-
+        android:visibility="invisible"
         android:layout_width="42dp"
         android:layout_height="36dp"
         android:layout_gravity="end"
@@ -24,7 +24,7 @@
     <ImageView
         android:id="@+id/cross"
         android:layout_width="42dp"
-
+        android:visibility="invisible"
         android:layout_height="36dp"
         android:layout_gravity="end"
         android:layout_marginTop="16dp"
@@ -33,6 +33,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvExam" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tick"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubject" />
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tick"
+        tools:layout_editor_absoluteX="12dp" />
+
     <TextView
         android:id="@+id/tvSubject"
         android:layout_width="wrap_content"
@@ -40,7 +57,7 @@
         android:layout_marginTop="4dp"
         android:text="Subject: "
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvExam"
         app:layout_constraintHorizontal_bias="0.018"
@@ -92,10 +109,10 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/tick"
-        tools:layout_editor_absoluteX="13dp">
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        tools:layout_editor_absoluteX="12dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/materialButton2"

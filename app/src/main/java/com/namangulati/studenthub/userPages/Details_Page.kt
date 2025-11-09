@@ -62,6 +62,7 @@ class Details_Page : AppCompatActivity() {
                         val imageUrl = user.photo?.replace("http://", "https://")
                         Glide.with(this)
                             .load(imageUrl)
+                            .circleCrop()
                             .into(profileImage)
                         profileImageUrl=user.photo
                     } else {

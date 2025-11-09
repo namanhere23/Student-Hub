@@ -38,6 +38,7 @@ class ProfileFragment : Fragment() {
                             val imageUrl = user.photo?.replace("http://", "https://")
                             Glide.with(requireContext())
                                 .load(imageUrl)
+                                .circleCrop()
                                 .into(profilePic)
                         } else {
                             profilePic.setImageResource(R.drawable.ic_profile_pic)

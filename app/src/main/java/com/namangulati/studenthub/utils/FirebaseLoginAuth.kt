@@ -39,13 +39,13 @@ object FirebaseLoginAuth {
                     var finalMobile=phone
                     var finalphoto=photoUrl
 
-//                    val iiitlPattern = Regex("^[A-Za-z0-9._%+-]+@iiitl\\.ac\\.in$", RegexOption.IGNORE_CASE)
-//
-//                    if (!email?.let { iiitlPattern.matches(it) }!!) {
-//                        Toast.makeText(activity, "Please enter a valid IIITL email (e.g., name@iiitl.ac.in)", Toast.LENGTH_SHORT).show()
-//                    }
+                    val iiitlPattern = Regex("^[A-Za-z0-9._%+-]+@iiitl\\.ac\\.in$", RegexOption.IGNORE_CASE)
 
-                    if (false){}
+                    if (!email?.let { iiitlPattern.matches(it) }!!) {
+                        Toast.makeText(activity, "Please enter a valid IIITL email (e.g., name@iiitl.ac.in)", Toast.LENGTH_SHORT).show()
+                    }
+
+//                    if (false){}
 
                     else {
                         uid?.let { uid ->

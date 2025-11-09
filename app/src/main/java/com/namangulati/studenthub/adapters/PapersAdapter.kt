@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.namangulati.studenthub.databinding.PapersRecyclerBinding
-import com.namangulati.studenthub.models.PapersModel
+import com.namangulati.studenthub.modelsRoom.PapersModelRoom
 
 class PapersAdapter(
     private val context: Context,
-    private val papers: List<PapersModel>
+    private val papers: List<PapersModelRoom>
 ) : RecyclerView.Adapter<PapersAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: PapersRecyclerBinding) :

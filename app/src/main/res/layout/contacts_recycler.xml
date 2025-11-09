@@ -18,7 +18,6 @@
             android:id="@+id/chatPersonDP"
             android:layout_width="55dp"
             android:layout_height="55dp"
-            android:padding="5dp"
             android:src="@drawable/baseline_person_24"
             android:scaleType="centerCrop"
             android:clipToOutline="true"

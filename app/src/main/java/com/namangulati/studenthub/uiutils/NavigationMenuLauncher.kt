@@ -72,6 +72,7 @@ object NavigationMenuLauncher {
                         if (headerProfilePic != null) {
                             Glide.with(activity)
                                 .load(imageUrl)
+                                .circleCrop()
                                 .into(headerProfilePic)
                         }
 

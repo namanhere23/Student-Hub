@@ -14,6 +14,9 @@
         android:layout_marginHorizontal="20dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
+        android:background="@drawable/rounded_four_sides"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
         tools:layout_editor_absoluteX="30dp">
 
         <TextView
@@ -23,7 +26,7 @@
             android:gravity="center"
             android:text="Student Hub"
             android:textColor="#e13947"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold|italic"
             tools:ignore="MissingConstraints" />
 
@@ -35,6 +38,7 @@
             android:layout_gravity="end"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile_pic"
+            android:background="@drawable/circle"
             app:layout_constraintEnd_toEndOf="parent"
             tools:layout_editor_absoluteY="0dp" />
 

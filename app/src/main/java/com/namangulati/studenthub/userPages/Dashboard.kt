@@ -10,9 +10,11 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.namangulati.studenthub.Database.PapersRepository
 import com.namangulati.studenthub.LiveDataViewModel
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.PapersAdapter
@@ -21,7 +23,7 @@ import com.namangulati.studenthub.fragments.UploadFragment
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.BottomNavigationLauncher.launchNavigationMenuBottom
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
-import com.namangulati.studenthub.utils.FirebasePapersDatabaseUtils
+import com.namangulati.studenthub.userPages.DashboardViewModel
 import com.namangulati.studenthub.utils.PermissionsUtils.reqNotificationPermission
 
 class Dashboard : AppCompatActivity() {
@@ -73,9 +75,11 @@ class Dashboard : AppCompatActivity() {
             }
 
         }
-        val viewDModel = ViewModelProvider(this)[DashboardViewModel::class.java]
 
-        viewDModel.loadPapers(this)
+        val viewModelFactory = DashboardViewModel.Companion.Factory(applicationContext)
+        val viewDModel = ViewModelProvider(this, viewModelFactory)[DashboardViewModel::class.java]
+
+        viewDModel.loadPapers()
 
         viewDModel.papers.observe(this) { papers ->
             val recyclerView = findViewById<RecyclerView>(R.id.recyclerOrders)

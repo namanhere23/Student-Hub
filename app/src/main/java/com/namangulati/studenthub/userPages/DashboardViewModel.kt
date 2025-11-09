@@ -4,17 +4,34 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.namangulati.studenthub.models.PapersModel
-import com.namangulati.studenthub.utils.FirebasePapersDatabaseUtils
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.namangulati.studenthub.Database.PapersRepository
+import com.namangulati.studenthub.modelsRoom.PapersModelRoom
+import kotlinx.coroutines.launch
 
-class DashboardViewModel  : ViewModel() {
-    private val _papers = MutableLiveData<List<PapersModel>>()
-    val papers: LiveData<List<PapersModel>> get() = _papers
+class DashboardViewModel(private val repo: PapersRepository)  : ViewModel() {
+    private val _papers = MutableLiveData<List<PapersModelRoom>>()
+    val papers: LiveData<List<PapersModelRoom>> = repo.getLocalPapers().asLiveData()
 
-    fun loadPapers(context: Context) {
-        if (_papers.value != null) return
-        FirebasePapersDatabaseUtils.loadAllPapers(context) { papers ->
-            _papers.value = papers
+    fun loadPapers() {
+        viewModelScope.launch {
+            repo.syncPapersFromFirebase()
+        }
+    }
+
+    companion object {
+        class Factory(private val context: Context) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    // The factory now handles creating the repository
+                    val repo = PapersRepository(context.applicationContext)
+                    return DashboardViewModel(repo) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
         }
     }
 }

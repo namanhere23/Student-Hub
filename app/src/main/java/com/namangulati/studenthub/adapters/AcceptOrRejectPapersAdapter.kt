@@ -35,10 +35,10 @@ class AcceptOrRejectPapersAdapter (
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val paper = papers[position]
-        holder.binding.tvSubject.text = "Subject: ${paper.subject ?: ""}"
-        holder.binding.tvSemester.text = "Semester: ${paper.semester ?: ""}"
-        holder.binding.tvYear.text = "Year: ${paper.year ?: ""}"
-        holder.binding.tvExam.text = "Exam: ${paper.exam ?: ""}"
+        holder.binding.tvSubject.text = "${paper.subject ?: ""}"
+        holder.binding.tvSemester.text = "${paper.semester ?: ""}"
+        holder.binding.tvYear.text = "${paper.year ?: ""}"
+        holder.binding.tvExam.text = "${paper.exam ?: ""}"
 
         val fileUrl = paper.link ?: ""
 

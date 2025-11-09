@@ -50,6 +50,7 @@ class ContactsAdapter(
         val imageUrl = contact.url.replace("http://", "https://")
         Glide.with(context)
             .load(imageUrl)
+            .circleCrop()
             .into(holder.binding.chatPersonDP)
 
         holder.binding.root.setOnClickListener {
