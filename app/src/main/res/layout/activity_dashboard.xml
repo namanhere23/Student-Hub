@@ -27,7 +27,7 @@
                 android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@drawable/bg_gradient_purple_trans"
                 android:orientation="vertical">
 
                 <FrameLayout
@@ -64,6 +64,8 @@
                     android:layout_gravity="end"
                     android:src="@drawable/baseline_upload_file_24" />
 
+                </LinearLayout>
+
                 <FrameLayout
                     android:id="@+id/Upload"
                     android:layout_width="match_parent"
@@ -74,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                </LinearLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerOrders"

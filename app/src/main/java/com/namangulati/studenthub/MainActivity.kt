@@ -26,6 +26,7 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
@@ -182,6 +183,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         val logoGoogle=findViewById<ImageView>(R.id.logo)
+        Glide.with(this)
+            .load("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/250px-Google_Favicon_2025.svg.png")
+            .circleCrop()
+            .into(logoGoogle)
 
         logoGoogle.setOnClickListener {
             val googleIdOption = GetGoogleIdOption.Builder()

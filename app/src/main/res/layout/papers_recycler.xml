@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:layout_margin="10dp"
     android:padding="12dp"
-    android:backgroundTint="#161616"
     android:background="@drawable/bg_card">
 
     <ImageView
@@ -36,7 +35,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/white"
+        android:background="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/tick"
         app:layout_constraintTop_toBottomOf="@+id/tvSubject" />
 
@@ -46,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="20dp"
-        android:background="@color/white"
+        android:background="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/tick"
         tools:layout_editor_absoluteX="12dp" />
 
@@ -56,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Subject: "
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tvExam"
@@ -70,7 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:text="Semester: "
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="17sp"
         app:layout_constraintEnd_toStartOf="@+id/tvYear"
@@ -85,7 +84,7 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="84dp"
         android:text="Year: "
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="17sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/tick"
@@ -95,11 +94,10 @@
         android:id="@+id/tvExam"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_four_sides"
-        android:backgroundTint="#2f2720"
-        android:padding="5dp"
+        android:background="@drawable/bg_gradient_purple"
+        android:paddingHorizontal="10dp"
         android:text="Exam"
-        android:textColor="#cc9966"
+        android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +116,7 @@
             android:id="@+id/materialButton2"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#2b241e"
+            android:backgroundTint="#141f33"
             android:text="Download"
             android:textColor="#c69463"
             android:textStyle="bold"
