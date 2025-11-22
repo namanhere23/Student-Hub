@@ -83,7 +83,7 @@ class AcceptOrRejectPapers : AppCompatActivity() {
                     remove(upload)
                     commit()
                 }
-                state=0
+                state1=0
             }
         }
 

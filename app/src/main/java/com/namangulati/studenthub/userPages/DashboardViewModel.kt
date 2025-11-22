@@ -26,7 +26,6 @@ class DashboardViewModel(private val repo: PapersRepository)  : ViewModel() {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 if (modelClass.isAssignableFrom(DashboardViewModel::class.java)) {
                     @Suppress("UNCHECKED_CAST")
-                    // The factory now handles creating the repository
                     val repo = PapersRepository(context.applicationContext)
                     return DashboardViewModel(repo) as T
                 }
