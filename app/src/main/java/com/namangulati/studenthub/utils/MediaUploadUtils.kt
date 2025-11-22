@@ -30,6 +30,7 @@ object MediaUploadUtils {
             val body = MultipartBody.Part.createFormData("media", file.name, requestFile)
 
             val response = ApiUploadUtilities.getApiInterface().uploadMedia(body)
+            Log.d("Hello5", "Response: ${response.body()}")
 
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {

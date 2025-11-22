@@ -38,6 +38,9 @@ class ChatViewModel: ViewModel() {
          If you don't have the answer, be honest. Say something like, "I don't have that specific information right now. You might want to check the official college website or ask the student council."
     """.trimIndent()
 
+//    private val systemPrompt2 = """
+//
+//    """
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
@@ -48,22 +51,25 @@ class ChatViewModel: ViewModel() {
         chat = generativeModel.startChat(
             history = listOf(
                 content(role = "user") { text(systemPrompt) },
-                content(role = "model") { text("Understood. I will only answer about Technical Studies.") }
+                content(role = "model") { text("Understood. I will only answer about food.") }
             )
         )
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun sendMessage(question: String) {
+
         viewModelScope.launch {
             try {
                 messageList.add(Message(question, "user"))
                 messageList.add(Message("Typing...", "model"))
+
                 val fullPrompt = systemPrompt
+
                 val chat = generativeModel.startChat(
                     history = buildList {
                         add(content(role = "user") { text(fullPrompt) })
-                        add(content(role = "model") { text("Understood. I will only answer about Technical Studies.") })
+                        add(content(role = "model") { text("Understood. I will only answer about food.") })
                         addAll(messageList.mapNotNull { msg ->
                             msg.message?.let { nonNullMessage ->
                                 val role = if (msg.senderId == "user") "user" else "model"
@@ -72,9 +78,12 @@ class ChatViewModel: ViewModel() {
                         })
                     }
                 )
+
                 val response = chat.sendMessage(question)
+
                 messageList.removeLast()
                 messageList.add(Message(response.text.toString(), "model"))
+
             } catch (e: Exception) {
                 messageList.removeLast()
                 messageList.add(Message("Error: ${e.message}", "model"))
