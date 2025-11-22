@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("com.google.gms.google-services")
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.firebase.crashlytics)
 }
 
 android {
@@ -69,6 +70,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.database.ktx)
     implementation(libs.androidx.lifecycle.process)
+    implementation(libs.firebase.crashlytics)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
