@@ -111,10 +111,33 @@ object FirebaseLoginAuth {
                 if (user != null) {
                     if (user.isEmailVerified) {
                         Toast.makeText(activity, "Login successful!", Toast.LENGTH_SHORT).show()
-                        (activity.application as OnlineOfflineStatus).startPresenceListener()
-                        val intent=Intent(activity,Details_Page::class.java)
-                        activity.startActivity(intent)
-                        activity.finish()
+                        
+                        val uid = user.uid
+                        FirebaseUserDatabaseUtils.loadUserByUid(activity, uid) { dbUser ->
+                            val userDetails = if (dbUser != null) {
+                                UserDetailsModel(
+                                    dbUser.name ?: "",
+                                    user.email ?: "",
+                                    dbUser.mobile ?: "",
+                                    dbUser.photo ?: "",
+                                    uid,
+                                    dbUser.groups ?: arrayListOf()
+                                )
+                            } else {
+                                UserDetailsModel("", user.email ?: "", "", "", uid, arrayListOf())
+                            }
+                            
+                            (activity.application as OnlineOfflineStatus).startPresenceListener()
+                            val intent = if (dbUser != null && dbUser.mobile?.length == 10) {
+                                Intent(activity, Dashboard::class.java)
+                            } else {
+                                Intent(activity, Details_Page::class.java)
+                            }
+                            intent.putExtra("EXTRA_USER_DETAILS", userDetails)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            activity.startActivity(intent)
+                            activity.finish()
+                        }
                     } else {
                         Toast.makeText(activity, "Please verify your email before logging in.", Toast.LENGTH_LONG).show()
                         auth.signOut()

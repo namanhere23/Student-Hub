@@ -22,6 +22,8 @@ import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
 import com.namangulati.studenthub.utils.MediaUploadUtils.uploadDocumentToServer
 import com.namangulati.studenthub.utils.PermissionsUtils.requestExternalStoragePermission
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class Details_Page : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -48,26 +50,30 @@ class Details_Page : AppCompatActivity() {
 
         person?.uid?.let { uid ->
             FirebaseUserDatabaseUtils.loadUserByUid(this,uid) { user ->
-                if (user != null) {
-                    person.name = user.name
-                    person.email = user.email
-                    person.mobile = user.mobile
-                    person.uid=user.uid
-                    person.groups=user.groups
-                    etName.setText(user.name ?: "")
-                    etemail.setText(user.email ?: "")
-                    etMobileDetails.setText(user.mobile ?: "")
+                lifecycleScope.launch {
+                    if (!isFinishing && !isDestroyed) {
+                        if (user != null) {
+                            person.name = user.name
+                            person.email = user.email
+                            person.mobile = user.mobile
+                            person.uid=user.uid
+                            person.groups=user.groups
+                            etName.setText(user.name ?: "")
+                            etemail.setText(user.email ?: "")
+                            etMobileDetails.setText(user.mobile ?: "")
 
-                    if (!user.photo.isNullOrEmpty()) {
-                        val imageUrl = user.photo?.replace("http://", "https://")
-                        Glide.with(this)
-                            .load(imageUrl)
-                            .circleCrop()
-                            .into(profileImage)
-                        profileImageUrl=user.photo
-                    } else {
-                        profileImage.setImageResource(R.drawable.ic_profile_pic)
-                        profileImageUrl= null
+                            if (!user.photo.isNullOrEmpty()) {
+                                val imageUrl = user.photo?.replace("http://", "https://")
+                                Glide.with(this@Details_Page)
+                                    .load(imageUrl)
+                                    .circleCrop()
+                                    .into(profileImage)
+                                profileImageUrl=user.photo
+                            } else {
+                                profileImage.setImageResource(R.drawable.ic_profile_pic)
+                                profileImageUrl= null
+                            }
+                        }
                     }
                 }
             }
