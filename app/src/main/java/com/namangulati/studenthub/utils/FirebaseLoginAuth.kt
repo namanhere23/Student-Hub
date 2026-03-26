@@ -12,7 +12,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Co
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.namangulati.studenthub.controllers.OnlineOfflineStatus
 import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.userPages.Dashboard
