@@ -79,7 +79,6 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-functions")
-    implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-messaging")
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")

@@ -12,11 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.namangulati.studenthub.API.FcmUtilits
 import com.namangulati.studenthub.R
 import com.namangulati.studenthub.adapters.MessageAdapter
@@ -90,9 +87,9 @@ class MessagePage : AppCompatActivity() {
         recyclerMessages.layoutManager = layoutManager
         recyclerMessages.adapter = messageAdapter
 
-        val database = FirebaseDatabase.getInstance()
-        val chats = database.getReference("chats")
-        val usersChats = database.getReference("usersChats")
+        val database = FirebaseFirestore.getInstance()
+        val chats = database.collection("chats")
+        val usersChats = database.collection("usersChats")
 
         loadUserByUid(this, ruid!!) { user ->
             if (user == null) {
@@ -117,40 +114,35 @@ class MessagePage : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
-                val messageObject = Message(message, person.uid)
+                val timestampMs = Instant.now().toEpochMilli()
+                val messageObject = Message(message, person.uid, timestampMs)
 
                 loadUserByUid(this, ruid) {
                     if (it?.mobile.equals("0000000000")) {
-                        chats.child(ruid).child("messages").push()
-                            .setValue(messageObject).addOnSuccessListener {
-                                val time = Instant.now().toEpochMilli()
-                                usersChats.child(ruid).child(person.uid!!).child("time")
-                                    .setValue(time)
+                        chats.document(ruid).collection("messages").add(messageObject)
+                            .addOnSuccessListener {
+                                usersChats.document(ruid).collection("partners").document(person.uid!!).set(mapOf("time" to timestampMs))
                             }
 
                         etMessage.text.clear()
 
                     } else {
-                        chats.child(senderRoom!!).child("messages").push()
-                            .setValue(messageObject).addOnSuccessListener {
-                                chats.child(receiverRoom!!).child("messages").push()
-                                    .setValue(messageObject)
+                        chats.document(senderRoom!!).collection("messages").add(messageObject)
+                            .addOnSuccessListener {
+                                chats.document(receiverRoom!!).collection("messages").add(messageObject)
                             }.addOnSuccessListener {
-                                val time = Instant.now().toEpochMilli()
-                                usersChats.child(person.uid!!).child(ruid).child("time")
-                                    .setValue(time)
-                                usersChats.child(ruid).child(person.uid!!).child("time")
-                                    .setValue(time)
+                                usersChats.document(person.uid!!).collection("partners").document(ruid).set(mapOf("time" to timestampMs))
+                                usersChats.document(ruid).collection("partners").document(person.uid!!).set(mapOf("time" to timestampMs))
                             }
 
                         etMessage.text.clear()
 
-                        val tokenRef = FirebaseDatabase.getInstance()
-                            .getReference("userTokens")
-                            .child(ruid)
+                        val tokenRef = FirebaseFirestore.getInstance()
+                            .collection("userTokens")
+                            .document(ruid)
 
                         tokenRef.get().addOnSuccessListener { snapshot ->
-                            val receiverToken = snapshot.getValue(String::class.java)
+                            val receiverToken = snapshot.getString("token")
                             if (!receiverToken.isNullOrEmpty()) {
                                 FcmUtilits.sendMessageWithToken(receiverToken, message)
                             }
@@ -163,22 +155,26 @@ class MessagePage : AppCompatActivity() {
 
         }
     }
-    private fun setupChatListener(chats: DatabaseReference, roomId: String) {
-        chats.child(roomId).child("messages")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+    private fun setupChatListener(chats: CollectionReference, roomId: String) {
+        chats.document(roomId).collection("messages")
+            .orderBy("timestamp")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e("MessagePage", "Chat listener cancelled: ${error.message}")
+                    return@addSnapshotListener
+                }
+                
+                if (snapshot != null) {
                     messageList.clear()
-                    for (postSnapshot in snapshot.children) {
-                        val message = postSnapshot.getValue(Message::class.java)
+                    for (postSnapshot in snapshot.documents) {
+                        val message = postSnapshot.toObject(Message::class.java)
                         message?.let { messageList.add(it) }
                     }
                     messageAdapter.notifyDataSetChanged()
-                    recyclerMessages.scrollToPosition(messageList.size - 1)
+                    if (messageList.isNotEmpty()) {
+                        recyclerMessages.scrollToPosition(messageList.size - 1)
+                    }
                 }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("MessagePage", "Chat listener cancelled: ${error.message}")
-                }
-            })
+            }
     }
 }

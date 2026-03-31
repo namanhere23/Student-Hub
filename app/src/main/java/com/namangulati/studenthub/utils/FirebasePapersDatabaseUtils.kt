@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.namangulati.studenthub.Dao.PapersDao
 import com.namangulati.studenthub.Database.PapersDatabase
 import com.namangulati.studenthub.models.NotConfirmedPapersModel
@@ -23,12 +23,12 @@ object FirebasePapersDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val papersRef = database.getReference("papers")
+        val database = FirebaseFirestore.getInstance()
+        val papersRef = database.collection("papers")
 
         papersRef.get()
             .addOnSuccessListener { snap->
-                val papers = snap.children.mapNotNull { it.getValue(PapersModel::class.java) }
+                val papers = snap.toObjects(PapersModel::class.java)
                 onResult(papers)
             }
             .addOnFailureListener{
@@ -41,16 +41,15 @@ object FirebasePapersDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val papersRef = database.getReference("notConfirmedPapers")
-        val newRef = papersRef.push()
-        paper.key = newRef.key
-        newRef.setValue(paper)
+        val database = FirebaseFirestore.getInstance()
+        val papersRef = database.collection("notConfirmedPapers")
+        val newRef = papersRef.document()
+        paper.key = newRef.id
+        newRef.set(paper)
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Failed to upload paper: ${e.message}", Toast.LENGTH_SHORT).show()
                 onResult(false)
             }
-
             .addOnSuccessListener {
                 onResult(true)
             }
@@ -61,18 +60,17 @@ object FirebasePapersDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val papersRef = database.getReference("papers")
-        val newRef = papersRef.push()
+        val database = FirebaseFirestore.getInstance()
+        val papersRef = database.collection("papers")
+        val newRef = papersRef.document()
 
-        newRef.setValue(paper)
+        newRef.set(paper)
             .addOnFailureListener { e ->
                 deletePaper(context,paper.key!!){
                     onResult(true)
                 }
                 onResult(false)
             }
-
             .addOnSuccessListener {
                 onResult(true)
             }
@@ -83,10 +81,10 @@ object FirebasePapersDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val paperRef = database.getReference("notConfirmedPapers").child(paperId)
+        val database = FirebaseFirestore.getInstance()
+        val paperRef = database.collection("notConfirmedPapers").document(paperId)
 
-        paperRef.removeValue()
+        paperRef.delete()
             .addOnSuccessListener {
                 onResult(true)
             }
@@ -105,12 +103,12 @@ object FirebasePapersDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val papersRef = database.getReference("notConfirmedPapers")
+        val database = FirebaseFirestore.getInstance()
+        val papersRef = database.collection("notConfirmedPapers")
 
         papersRef.get()
             .addOnSuccessListener { snap->
-                val papers = snap.children.mapNotNull { it.getValue(NotConfirmedPapersModel::class.java) }
+                val papers = snap.toObjects(NotConfirmedPapersModel::class.java)
                 onResult(papers)
             }
             .addOnFailureListener{

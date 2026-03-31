@@ -2,7 +2,7 @@ package com.namangulati.studenthub.utils
 
 import android.content.Context
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.namangulati.studenthub.models.UserDetailsModel
 
 object GetOfflineOnlineStatus {
@@ -12,12 +12,26 @@ object GetOfflineOnlineStatus {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val usersRef = database.getReference("users")
-        usersRef.child(uid).get()
-            .addOnSuccessListener { snap ->
-                val user = snap.getValue(UserDetailsModel::class.java)
-                onResult(user?.status)
+        val database = FirebaseFirestore.getInstance()
+        val usersRef = database.collection("users")
+        usersRef.document(uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(UserDetailsModel::class.java)
+                if (user != null) {
+                    if (user.status == "Online" && user.lastSeen != null) {
+                        val currentTime = System.currentTimeMillis()
+                        val diff = currentTime - user.lastSeen!!
+                        if (diff > 15 * 60 * 1000) {
+                            onResult("Offline")
+                        } else {
+                            onResult("Online")
+                        }
+                    } else {
+                        onResult(user.status)
+                    }
+                } else {
+                    onResult(null)
+                }
             }
             .addOnFailureListener { e ->
                 onResult("...")

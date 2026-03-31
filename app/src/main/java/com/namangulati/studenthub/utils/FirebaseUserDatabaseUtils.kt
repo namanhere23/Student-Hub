@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.namangulati.studenthub.models.ContactsModel
 import com.namangulati.studenthub.models.Groups
 import com.namangulati.studenthub.models.UserDetailsModel
@@ -17,11 +17,11 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val usersRef = database.getReference("users")
-        usersRef.child(uid).get()
-            .addOnSuccessListener { snap ->
-                val user = snap.getValue(UserDetailsModel::class.java)
+        val database = FirebaseFirestore.getInstance()
+        val usersRef = database.collection("users")
+        usersRef.document(uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject(UserDetailsModel::class.java)
                 onResult(user)
             }
             .addOnFailureListener { e ->
@@ -36,24 +36,23 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val usersRef = database.getReference("users")
+        val database = FirebaseFirestore.getInstance()
+        val usersRef = database.collection("users")
         val newRef = if (user.uid != null) {
-            usersRef.child(user.uid!!)
+            usersRef.document(user.uid!!)
         } else {
-            usersRef.push()
+            usersRef.document()
         }
 
-        user.uid = newRef.key
+        user.uid = newRef.id
 
         if (user.uid != null) {
-            usersRef.child(user.uid!!).setValue(user)
+            usersRef.document(user.uid!!).set(user)
                 .addOnFailureListener { e ->
                     Toast.makeText(context, "Failed to save : ${e.message}", Toast.LENGTH_SHORT)
                         .show()
                     onResult(false)
                 }
-
                 .addOnSuccessListener {
                     onResult(true)
                 }
@@ -65,8 +64,8 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val usersRef = database.getReference("users")
+        val database = FirebaseFirestore.getInstance()
+        val usersRef = database.collection("users")
 
         usersRef.get()
             .addOnSuccessListener { snap ->
@@ -76,13 +75,12 @@ object FirebaseUserDatabaseUtils {
                     if (it != null) {
                         userYear= it.groups
                     }
-                    for (userSnapshot in snap.children) {
-                        val user = userSnapshot.getValue(UserDetailsModel::class.java)
+                    for (userDocument in snap.documents) {
+                        val user = userDocument.toObject(UserDetailsModel::class.java)
 
                         if (user != null) {
                             if(user.mobile!="0000000000")
                                 userList.add(user)
-
                             else{
                                 val accessYears=user.groups
                                 for(year in userYear){
@@ -90,7 +88,6 @@ object FirebaseUserDatabaseUtils {
                                         userList.add(user)
                                     }
                                 }
-
                             }
                         }
                     }
@@ -129,45 +126,43 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val usersChatsRef = database.getReference("usersChats").child(currentUserUid)
-        val usersRef = database.getReference("users")
-        val groupRef = database.getReference("groups")
+        val database = FirebaseFirestore.getInstance()
+        val usersChatsRef = database.collection("usersChats").document(currentUserUid).collection("partners")
+        val usersRef = database.collection("users")
+        val groupRef = database.collection("groups")
 
         usersChatsRef.get().addOnSuccessListener { chatPartnerSnapshots ->
-            if (!chatPartnerSnapshots.exists()) {
+            if (chatPartnerSnapshots.isEmpty) {
                 onResult(emptyList())
                 return@addOnSuccessListener
             }
 
             val chatPartnerMap = mutableMapOf<String, Long>()
-            for (snap in chatPartnerSnapshots.children) {
-                val partnerUid = snap.key
-                val time = snap.child("time").getValue(Long::class.java)
-                if (partnerUid != null && time != null) {
+            for (snap in chatPartnerSnapshots.documents) {
+                val partnerUid = snap.id
+                val time = snap.getLong("time")
+                if (time != null) {
                     chatPartnerMap[partnerUid] = time
                 }
             }
 
             var userYear= ArrayList<String>()
 
-            loadUserByUid(context,currentUserUid){
-                if (it != null) {
-                    userYear= it.groups
+            loadUserByUid(context,currentUserUid){ currentUserObj ->
+                if (currentUserObj != null) {
+                    userYear= currentUserObj.groups
                 }
 
-                groupRef.get().addOnSuccessListener {
-                    for (snap in it.children) {
-                        val partnerUid = snap.key
+                groupRef.get().addOnSuccessListener { groupQuerySnap ->
+                    for (snap in groupQuerySnap.documents) {
+                        val partnerUid = snap.id
                         val time = Instant.now().toEpochMilli()
-                        val group = snap.getValue(Groups::class.java)
+                        val group = snap.toObject(Groups::class.java)
                         val accessYears = group?.accessYears
                         if (accessYears != null) {
                             for(year in accessYears){
                                 if(userYear.contains(year)){
-                                    if (partnerUid != null) {
-                                        chatPartnerMap[partnerUid] = time
-                                    }
+                                    chatPartnerMap[partnerUid] = time
                                 }
                             }
                         }
@@ -177,8 +172,8 @@ object FirebaseUserDatabaseUtils {
                         val chatContactsList = mutableListOf<ContactsModel>()
 
                         val allUsersMap = mutableMapOf<String, UserDetailsModel>()
-                        for (userSnap in allUsersSnapshot.children) {
-                            val user = userSnap.getValue(UserDetailsModel::class.java)
+                        for (userSnap in allUsersSnapshot.documents) {
+                            val user = userSnap.toObject(UserDetailsModel::class.java)
                             if (user?.uid != null) {
                                 allUsersMap[user.uid!!] = user
                             }
@@ -221,31 +216,27 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
 
-        val database = FirebaseDatabase.getInstance()
-        val groupRef = database.getReference("groups")
-        val newGroupRef = groupRef.push()
-        val uid = newGroupRef.key
+        val database = FirebaseFirestore.getInstance()
+        val groupRef = database.collection("groups")
+        val newGroupRef = groupRef.document()
+        val uid = newGroupRef.id
 
-        if (uid != null) {
-            var group = Groups(uid, groups)
-            groupRef.child(group.uid!!).setValue(group)
-                .addOnFailureListener { e ->
-                    Toast.makeText(
-                        context,
-                        "Failed to save group: ${e.message}",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                    onResult(false)
+        var group = Groups(uid, groups)
+        groupRef.document(group.uid!!).set(group)
+            .addOnFailureListener { e ->
+                Toast.makeText(
+                    context,
+                    "Failed to save group: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                onResult(false)
+            }
+            .addOnSuccessListener {
+                saveUser(context, UserDetailsModel(name, "group$name@iiitl.ac.in", "0000000000", url, uid, groups, "group")
+                ) {
+                    onResult(true)
                 }
 
-                .addOnSuccessListener {
-                    saveUser(context, UserDetailsModel(name, "group$name@iiitl.ac.in", "0000000000", url, uid, groups, "group")
-                    ) {
-                        onResult(true)
-                    }
-
-                }
-        }
+            }
     }
 }

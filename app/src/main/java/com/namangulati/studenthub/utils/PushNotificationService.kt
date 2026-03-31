@@ -1,7 +1,7 @@
     package com.namangulati.studenthub.utils
 
     import com.google.firebase.auth.FirebaseAuth
-    import com.google.firebase.database.FirebaseDatabase
+    import com.google.firebase.firestore.FirebaseFirestore
     import com.google.firebase.messaging.FirebaseMessagingService
     import com.google.firebase.messaging.RemoteMessage
     import com.namangulati.studenthub.userPages.MessagePage
@@ -13,8 +13,8 @@
 
             val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
             if (currentUserUid != null) {
-                val database = FirebaseDatabase.getInstance().getReference("userTokens")
-                database.child(currentUserUid).setValue(token)
+                val database = FirebaseFirestore.getInstance().collection("userTokens")
+                database.document(currentUserUid).set(mapOf("token" to token))
         }
         }
 

@@ -6,11 +6,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 class OnlineOfflineStatus : Application() {
-    private var userStatusRef: DatabaseReference? = null
+    private var userStatusRef: DocumentReference? = null
     private var presenceListener: LifecycleEventObserver? = null
 
     override fun onCreate() {
@@ -21,19 +21,24 @@ class OnlineOfflineStatus : Application() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser ?: return
         stopPresenceListener()
 
-        userStatusRef = FirebaseDatabase.getInstance().getReference("users")
-            .child(firebaseUser.uid)
-            .child("status")
+        userStatusRef = FirebaseFirestore.getInstance().collection("users")
+            .document(firebaseUser.uid)
 
         presenceListener = object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 when (event) {
                     Lifecycle.Event.ON_START -> {
-                        userStatusRef?.setValue("Online")
+                        userStatusRef?.update(
+                            "status", "Online",
+                            "lastSeen", System.currentTimeMillis()
+                        )
                     }
 
                     Lifecycle.Event.ON_STOP -> {
-                        userStatusRef?.setValue("Offline")
+                        userStatusRef?.update(
+                            "status", "Offline",
+                            "lastSeen", System.currentTimeMillis()
+                        )
                     }
 
                     else -> {
@@ -43,7 +48,6 @@ class OnlineOfflineStatus : Application() {
             }
         }
 
-        userStatusRef?.onDisconnect()?.setValue("offline")
         ProcessLifecycleOwner.get().lifecycle.addObserver(presenceListener!!)
     }
 
@@ -53,8 +57,10 @@ class OnlineOfflineStatus : Application() {
             presenceListener = null
         }
 
-        userStatusRef?.setValue("offline")
-        userStatusRef?.onDisconnect()?.cancel()
+        userStatusRef?.update(
+            "status", "Offline",
+            "lastSeen", System.currentTimeMillis()
+        )
         userStatusRef = null
     }
 

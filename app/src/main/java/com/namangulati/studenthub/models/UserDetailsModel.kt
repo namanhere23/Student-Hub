@@ -9,5 +9,6 @@ data class UserDetailsModel(
     var photo: String? = null,
     var uid: String?=null,
     var groups: ArrayList<String> = arrayListOf(),
-    var status:String?=null
+    var status:String?=null,
+    var lastSeen: Long? = null
 ) : Serializable
