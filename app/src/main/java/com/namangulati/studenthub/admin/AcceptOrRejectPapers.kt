@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -21,6 +22,7 @@ import com.namangulati.studenthub.models.UserDetailsModel
 import com.namangulati.studenthub.uiutils.BottomNavigationLauncher.launchNavigationMenuBottom
 import com.namangulati.studenthub.uiutils.NavigationMenuLauncher
 import com.namangulati.studenthub.utils.FirebasePapersDatabaseUtils
+import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
 
 class AcceptOrRejectPapers : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +98,25 @@ class AcceptOrRejectPapers : AppCompatActivity() {
             val progressBar=findViewById<ProgressBar>(R.id.progressBar)
             progressBar.visibility= View.GONE
             recyclerView.adapter = adapter
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val person = intent.getSerializableExtra("EXTRA_USER_DETAILS") as? UserDetailsModel
+        val email = person?.email ?: ""
+        
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Access Denied: You do not have admin privileges.", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        FirebaseUserDatabaseUtils.checkIfAdmin(this, email) { isAdmin ->
+            if (!isAdmin) {
+                Toast.makeText(this, "Access Denied: You do not have admin privileges.", Toast.LENGTH_SHORT).show()
+                finish()
+            }
         }
     }
 }

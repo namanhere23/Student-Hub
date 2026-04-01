@@ -239,4 +239,19 @@ object FirebaseUserDatabaseUtils {
 
             }
     }
+
+    fun checkIfAdmin(context: Context, email: String, onResult: (Boolean) -> Unit) {
+        if (FirebaseApp.getApps(context).isEmpty()) {
+            FirebaseApp.initializeApp(context)
+        }
+        val database = FirebaseFirestore.getInstance()
+        database.collection("admin").whereEqualTo("email", email).get()
+            .addOnSuccessListener { snap ->
+                onResult(!snap.isEmpty)
+            }
+            .addOnFailureListener { e ->
+                Log.e("AdminCheck", "Failed to check admin access", e)
+                onResult(false)
+            }
+    }
 }

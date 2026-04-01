@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
@@ -39,9 +40,20 @@ object NavigationMenuLauncher {
                     activity.startActivity(intent)
                 }
                 R.id.admin -> {
-                    val intent=Intent(activity, AcceptOrRejectPapers::class.java)
-                    intent.putExtra("EXTRA_USER_DETAILS", person)
-                    activity.startActivity(intent)
+                    val email = person.email ?: ""
+                    if (email.isNotEmpty()) {
+                        FirebaseUserDatabaseUtils.checkIfAdmin(activity, email) { isAdmin ->
+                            if (isAdmin) {
+                                val intent = Intent(activity, AcceptOrRejectPapers::class.java)
+                                intent.putExtra("EXTRA_USER_DETAILS", person)
+                                activity.startActivity(intent)
+                            } else {
+                                Toast.makeText(activity, "Access Denied: You do not have admin privileges.", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        Toast.makeText(activity, "Error: User email not found.", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 R.id.nav_profile -> {
                     val intent = Intent(activity, Details_Page::class.java)

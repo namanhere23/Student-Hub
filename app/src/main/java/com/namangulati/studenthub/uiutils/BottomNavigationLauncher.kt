@@ -2,6 +2,7 @@ package com.namangulati.studenthub.uiutils
 
 import android.app.Activity
 import android.content.Intent
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +15,7 @@ import com.namangulati.studenthub.userPages.Chat
 import com.namangulati.studenthub.userPages.ChatBot
 import com.namangulati.studenthub.userPages.Dashboard
 import com.namangulati.studenthub.userPages.Details_Page
+import com.namangulati.studenthub.utils.FirebaseUserDatabaseUtils
 
 object BottomNavigationLauncher {
     fun launchNavigationMenuBottom(activity: Activity, person: UserDetailsModel) {
@@ -46,9 +48,20 @@ object BottomNavigationLauncher {
                     }
 
                     R.id.admin -> {
-                        val intent = Intent(activity, AcceptOrRejectPapers::class.java)
-                        intent.putExtra("EXTRA_USER_DETAILS", person)
-                        activity.startActivity(intent)
+                        val email = person.email ?: ""
+                        if (email.isNotEmpty()) {
+                            FirebaseUserDatabaseUtils.checkIfAdmin(activity, email) { isAdmin ->
+                                if (isAdmin) {
+                                    val intent = Intent(activity, AcceptOrRejectPapers::class.java)
+                                    intent.putExtra("EXTRA_USER_DETAILS", person)
+                                    activity.startActivity(intent)
+                                } else {
+                                    Toast.makeText(activity, "Access Denied: You do not have admin privileges.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(activity, "Error: User email not found.", Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                     R.id.chatBot -> {

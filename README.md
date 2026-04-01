@@ -159,6 +159,33 @@ app/src/main/java/com/namangulati/studenthub/
 4. Configure Realtime Database rules
 5. Set up Cloud Messaging and generate server key
 
+### Firestore Security Rules
+To ensure the application data and the admin panel are secure, you MUST deploy the following security rules to your Cloud Firestore database under the **Rules** tab in the Firebase Console:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Only real admins can read/write the admin collection
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null && exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
+    }
+    
+    // Anyone logged in can read papers, but ONLY admins can add to the confirmed 'papers' collection
+    match /papers/{document=**} {
+      allow read: if request.auth != null;
+      allow write: if exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
+    }
+
+    // Default rule for everything else
+    match /{document=**} {
+      allow read, write: if request.auth != null; 
+    }
+  }
+}
+```
+
 ### Permissions
 The app requires the following permissions:
 - `INTERNET`: Network access
