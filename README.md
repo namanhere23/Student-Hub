@@ -53,7 +53,6 @@ StudentHub is an Android application designed for IIIT Lucknow students to facil
 
 ### Backend Services
 - **Firebase Authentication**: User authentication
-- **Firebase Realtime Database**: Real-time data synchronization
 - **Firebase Cloud Messaging**: Push notifications
 - **Firebase Crashlytics**: Crash reporting
 - **Firebase Functions**: Serverless functions
@@ -106,7 +105,6 @@ app/src/main/java/com/namangulati/studenthub/
 - Firebase project with the following services enabled:
   - Authentication
   - Firestore
-  - Realtime Database
   - Cloud Messaging
   - Crashlytics
 
@@ -156,8 +154,7 @@ app/src/main/java/com/namangulati/studenthub/
 1. Enable Email/Password authentication in Firebase Console
 2. Configure OAuth consent screen for Google Sign-In
 3. Set up Firestore database with appropriate security rules
-4. Configure Realtime Database rules
-5. Set up Cloud Messaging and generate server key
+4. Set up Cloud Messaging and generate server key
 
 ### Firestore Security Rules
 To ensure the application data and the admin panel are secure, you MUST deploy the following security rules to your Cloud Firestore database under the **Rules** tab in the Firebase Console:
@@ -167,20 +164,84 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Only real admins can read/write the admin collection
-    match /admin/{document=**} {
-      allow read, write: if request.auth != null && exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
-    }
-    
-    // Anyone logged in can read papers, but ONLY admins can add to the confirmed 'papers' collection
-    match /papers/{document=**} {
-      allow read: if request.auth != null;
-      allow write: if exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
+    // Helper function to check if the user has an IIITL email
+    function isIIITLUser() {
+      // The $ ensures that the email ENDS strictly with @iiitl.ac.in
+      return request.auth != null && request.auth.token.email.matches('.*@iiitl[.]ac[.]in$');
     }
 
-    // Default rule for everything else
+    // Helper function to check if the user is an admin
+    function isAdmin() {
+      // IMPORTANT: This requires the Document ID in the 'admin' collection to exactly match the user's email address
+      return isIIITLUser() && exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
+    }
+    
+    // --- ADMIN & REGIONAL ---
+    match /admin/{document=**} {
+      // Allow any IIITL user to verify who is an admin without throwing backend Permission errors
+      allow read: if isIIITLUser();
+      // Only true admins can modify the admin list
+      allow write: if isAdmin();
+    }
+    
+    match /papers/{document=**} {
+      allow read: if isIIITLUser();
+      allow write: if isAdmin();
+    }
+
+    // --- USER PROFILES & PRESENCE ---
+    match /users/{userId} {
+      // Anyone at IIITL can view names, emails, statuses, etc.
+      allow read: if isIIITLUser();
+      // Users can edit their own profile (e.g. Online/Offline status).
+      // Admins are granted write access so they can create fake users representing Groups.
+      allow write: if isIIITLUser() && (request.auth.uid == userId || isAdmin());
+    }
+
+    // --- GROUPS ---
+    match /groups/{groupId} {
+      // Anyone can browse groups
+      allow read: if isIIITLUser();
+      // Only admins can make new groups
+      allow write: if isAdmin();
+    }
+
+    // --- PUSH NOTIFICATION TOKENS ---
+    match /userTokens/{userId} {
+      // Devices need to read tokens to ping each other in MessagePage
+      allow read: if isIIITLUser();
+      // Users can only update their own tokens
+      allow write: if isIIITLUser() && request.auth.uid == userId;
+    }
+
+    // --- RECENT CHATS (Inbox Timestamps) ---
+    match /usersChats/{userId}/partners/{partnerId} {
+      // Users can only pull their own inbox lists
+      allow read: if request.auth.uid == userId;
+      // Allow write if: you're updating your inbox, you're updating your partner's inbox, 
+      // or you're updating the dummy inbox for a group
+      allow write: if isIIITLUser() && (
+        request.auth.uid == userId || 
+        request.auth.uid == partnerId || 
+        exists(/databases/$(database)/documents/groups/$(userId))
+      );
+    }
+
+    // --- SECURED CHAT MESSAGES ---
+    match /chats/{roomId}/messages/{messageId} {
+      // 1. 1-ON-1 CHATS: The app creates rooms like "uid1+uid2".
+      // We check if the user's UID exists anywhere inside that 56-character room ID string.
+      // 2. GROUP CHATS: The room ID is just the group ID. We check if it exists in the groups collection.
+      allow read, write: if isIIITLUser() && (
+        roomId.matches('.*' + request.auth.uid + '.*') ||
+        exists(/databases/$(database)/documents/groups/$(roomId))
+      );
+    }
+
+    // --- DEFAULT RULE ---
+    // Closes the database completely except for the exact paths explicitly matched above.
     match /{document=**} {
-      allow read, write: if request.auth != null; 
+      allow read, write: if false; 
     }
   }
 }

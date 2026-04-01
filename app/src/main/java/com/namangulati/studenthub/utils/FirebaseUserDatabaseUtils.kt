@@ -245,9 +245,10 @@ object FirebaseUserDatabaseUtils {
             FirebaseApp.initializeApp(context)
         }
         val database = FirebaseFirestore.getInstance()
-        database.collection("admin").whereEqualTo("email", email).get()
+        val cleanEmail = email.trim().lowercase()
+        database.collection("admin").document(cleanEmail).get()
             .addOnSuccessListener { snap ->
-                onResult(!snap.isEmpty)
+                onResult(snap.exists())
             }
             .addOnFailureListener { e ->
                 Log.e("AdminCheck", "Failed to check admin access", e)
