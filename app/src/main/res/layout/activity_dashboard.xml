@@ -13,6 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_gradient_purple_trans"
         android:orientation="vertical">
 
 
@@ -27,7 +28,6 @@
                 android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_gradient_purple_trans"
                 android:orientation="vertical">
 
                 <FrameLayout
@@ -39,19 +39,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center">
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="20dp"
                     android:gravity="center"
-                    android:letterSpacing=".7"
-                    android:text="-------------------\n Papers\n-------------------"
+                    android:layout_gravity="center"
+                    android:text="Papers"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +63,9 @@
                     android:layout_width="50dp"
                     android:layout_height="65dp"
                     android:layout_gravity="end"
-                    android:src="@drawable/baseline_upload_file_24" />
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/baseline_upload_file_24"
+                    />
 
                 </LinearLayout>
 
@@ -87,12 +90,27 @@
 
         </ScrollView>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/nav_menu"
-            app:labelVisibilityMode="labeled" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="28dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/white">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="8dp"
+                android:theme="@style/Theme.Material3.Light.NoActionBar"
+                app:menu="@menu/nav_menu"
+                app:labelVisibilityMode="labeled" />
+
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

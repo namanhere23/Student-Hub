@@ -57,62 +57,82 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check if the user has an IIITL email
+    // =====================================================================
+    // HELPER FUNCTIONS (Entry Pass)
+    // =====================================================================
+    
+    // Checks if the user is logged in AND has a valid college email
     function isIIITLUser() {
-      // The $ ensures that the email ENDS strictly with @iiitl.ac.in
       return request.auth != null && request.auth.token.email.matches('.*@iiitl[.]ac[.]in$');
     }
 
-    // Helper function to check if the user is an admin
+    // Checks if the user passes the IIITL check AND is listed in the admin collection
     function isAdmin() {
-      // IMPORTANT: This requires the Document ID in the 'admin' collection to exactly match the user's email address
       return isIIITLUser() && exists(/databases/$(database)/documents/admin/$(request.auth.token.email));
     }
     
-    // --- ADMIN & REGIONAL ---
+    // =====================================================================
+    // CORE COLLECTIONS
+    // =====================================================================
+    
+    // --- ADMIN ---
     match /admin/{document=**} {
-      // Allow any IIITL user to verify who is an admin without throwing backend Permission errors
       allow read: if isIIITLUser();
-      // Only true admins can modify the admin list
       allow write: if isAdmin();
     }
     
+    // --- OFFICIAL PAPERS (Approved) ---
     match /papers/{document=**} {
+      // Any IIITL user can read/download the approved papers
       allow read: if isIIITLUser();
+      // ONLY Admins can upload, edit, or delete official papers
       allow write: if isAdmin();
     }
 
-    // --- USER PROFILES & PRESENCE ---
-    match /users/{userId} {
-      // Anyone at IIITL can view names, emails, statuses, etc.
+    // --- PENDING PAPERS (Upload Queue) ---
+    match /notConfirmedPapers/{document=**} {
+      // IIITL users can see the pending list
       allow read: if isIIITLUser();
-      // Users can edit their own profile (e.g. Online/Offline status).
-      // Admins are granted write access so they can create fake users representing Groups.
-      allow write: if isIIITLUser() && (request.auth.uid == userId || isAdmin());
+      
+      // ANY logged-in person (even without IIITL email) can submit a new paper
+      // (This blocks completely anonymous bots but allows outside contributions)
+      allow create: if request.auth != null; 
+      
+      // Only admins can approve, modify, or delete pending papers
+      allow update, delete: if isAdmin();
+    }
+
+    // --- USER PROFILES ---
+    match /users/{userId} {
+      allow read: if isIIITLUser();
+      allow create: if isIIITLUser() && (request.auth.uid == userId || isAdmin());
+      // Users can edit their own profile, but CANNOT change their email.
+      allow update: if isIIITLUser() && (
+        isAdmin() || 
+        (request.auth.uid == userId && request.resource.data.email == resource.data.email)
+      );
+      allow delete: if isAdmin();
     }
 
     // --- GROUPS ---
     match /groups/{groupId} {
-      // Anyone can browse groups
       allow read: if isIIITLUser();
-      // Only admins can make new groups
       allow write: if isAdmin();
     }
 
     // --- PUSH NOTIFICATION TOKENS ---
     match /userTokens/{userId} {
-      // Devices need to read tokens to ping each other in MessagePage
       allow read: if isIIITLUser();
-      // Users can only update their own tokens
       allow write: if isIIITLUser() && request.auth.uid == userId;
     }
 
+    // =====================================================================
+    // CHAT & MESSAGING SYSTEM
+    // =====================================================================
+
     // --- RECENT CHATS (Inbox Timestamps) ---
     match /usersChats/{userId}/partners/{partnerId} {
-      // Users can only pull their own inbox lists
       allow read: if request.auth.uid == userId;
-      // Allow write if: you're updating your inbox, you're updating your partner's inbox, 
-      // or you're updating the dummy inbox for a group
       allow write: if isIIITLUser() && (
         request.auth.uid == userId || 
         request.auth.uid == partnerId || 
@@ -122,20 +142,20 @@ service cloud.firestore {
 
     // --- SECURED CHAT MESSAGES ---
     match /chats/{roomId}/messages/{messageId} {
-      // 1. 1-ON-1 CHATS: The app creates rooms like "uid1+uid2".
-      // We check if the user's UID exists anywhere inside that 56-character room ID string.
-      // 2. GROUP CHATS: The room ID is just the group ID. We check if it exists in the groups collection.
       allow read, write: if isIIITLUser() && (
         roomId.matches('.*' + request.auth.uid + '.*') ||
         exists(/databases/$(database)/documents/groups/$(roomId))
       );
     }
 
-    // --- DEFAULT RULE ---
-    // Closes the database completely except for the exact paths explicitly matched above.
+    // =====================================================================
+    // DEFAULT SAFETY NET
+    // =====================================================================
+    // Closes the database completely for any paths not explicitly matched above.
     match /{document=**} {
       allow read, write: if false; 
     }
+    
   }
 }
 ```

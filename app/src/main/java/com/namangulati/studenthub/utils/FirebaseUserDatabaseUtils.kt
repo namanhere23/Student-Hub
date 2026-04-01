@@ -183,12 +183,12 @@ object FirebaseUserDatabaseUtils {
                             val userDetails = allUsersMap[partnerUid]
                             if (userDetails != null) {
                                 val contact = ContactsModel(
-                                    name = userDetails.name!!,
-                                    email = userDetails.email!!,
-                                    uid = userDetails.uid!!,
+                                    name = userDetails.name ?: "Unknown User",
+                                    email = userDetails.email ?: "",
+                                    uid = userDetails.uid ?: partnerUid,
                                     time = time,
-                                    mobile = userDetails.mobile!!,
-                                    url = userDetails.photo!!
+                                    mobile = userDetails.mobile ?: "",
+                                    url = userDetails.photo ?: ""
                                 )
                                 chatContactsList.add(contact)
                             }

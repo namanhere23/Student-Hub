@@ -144,7 +144,7 @@ class MessagePage : AppCompatActivity() {
                         tokenRef.get().addOnSuccessListener { snapshot ->
                             val receiverToken = snapshot.getString("token")
                             if (!receiverToken.isNullOrEmpty()) {
-                                FcmUtilits.sendMessageWithToken(receiverToken, message)
+                                FcmUtilits.sendMessageWithToken(receiverToken, message, person.name.toString())
                             }
                         }
                     }

@@ -3,6 +3,7 @@ package com.namangulati.studenthub.userPages
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.namangulati.studenthub.R
 import com.namangulati.studenthub.controllers.ChatViewModel
 import com.namangulati.studenthub.models.Message
 
@@ -26,9 +30,10 @@ class ChatBot : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                Surface(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
                     ChatPage(chatViewModel)
                 }
             }
@@ -41,7 +46,7 @@ fun ChatPage(viewModel: ChatViewModel) {
     Column(
         modifier = Modifier
             .padding(horizontal = 15.dp)
-            .padding(bottom = 80.dp)
+            .padding(bottom = 20.dp)
             .padding(top = 20.dp)
     ) {
         AppHeader()
@@ -132,7 +137,7 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
 
     Row(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(1.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {

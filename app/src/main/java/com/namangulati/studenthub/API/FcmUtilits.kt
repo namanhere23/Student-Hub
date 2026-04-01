@@ -21,12 +21,12 @@ object FcmUtilits {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    fun sendMessageWithToken(token: String, messageText: String) {
+    fun sendMessageWithToken(token: String, messageText: String,title:String) {
         coroutineScope.launch {
             val messageDTO = SentMessageDTO(
                 to = token,
                 notification = NotificationBody(
-                    title = "New Message!",
+                    title = title,
                     body = messageText
                 )
             )

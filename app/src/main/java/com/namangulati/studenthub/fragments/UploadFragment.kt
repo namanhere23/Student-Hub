@@ -91,7 +91,9 @@ class UploadFragment : Fragment() {
             uploadDocumentToServer(requireContext(), uri) { media ->
                 binding.progressBar.visibility=View.GONE
                 if (media != null) {
+                    Log.d("Hello",media.toString())
                     uploadedUrl = media.data.url
+                    Toast.makeText(requireContext(),"Uploaded",Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "Failed to upload document", Toast.LENGTH_SHORT).show()
                 }

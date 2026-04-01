@@ -92,8 +92,10 @@ class Details_Page : AppCompatActivity() {
 
         val btn=findViewById<com.google.android.material.button.MaterialButton>(R.id.cont2)
 
-        etemail.setOnClickListener()
-        {
+        etemail.isFocusable = false
+        etemail.isFocusableInTouchMode = false
+        etemail.isClickable = true
+        etemail.setOnClickListener {
             finish()
         }
 
@@ -177,14 +179,25 @@ class Details_Page : AppCompatActivity() {
             val url=""
             Log.d("Hello2","Hello2")
             uploadDocumentToServer(this,uri){ media->
+                Log.d("Hello3",media.toString())
                 if(media!=null){
-                    profileImageUrl = media.data.url
+//                    profileImageUrl = media.data.url
                 }
                 else{
                     profileImageUrl = null
                 }
             }
-            profileImage.setImageURI(uri)
+            if (!uri.toString().isNullOrEmpty()) {
+                val imageUrl = uri.toString()?.replace("http://", "https://")
+                Glide.with(this@Details_Page)
+                    .load(imageUrl)
+                    .circleCrop()
+                    .into(profileImage)
+                profileImageUrl=uri.toString()
+            } else {
+                profileImage.setImageResource(R.drawable.ic_profile_pic)
+                profileImageUrl= null
+            }
 
         } else{
             profileImage.setImageResource(R.drawable.ic_profile_pic)

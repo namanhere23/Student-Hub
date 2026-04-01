@@ -100,12 +100,28 @@
         </LinearLayout>
 
     </ScrollView>
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_nav"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:menu="@menu/nav_menu"
-            app:labelVisibilityMode="labeled" />
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/white">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_nav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="8dp"
+                android:theme="@style/Theme.Material3.Light.NoActionBar"
+                app:menu="@menu/nav_menu"
+                app:labelVisibilityMode="labeled" />
+
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
