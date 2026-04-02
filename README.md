@@ -2,6 +2,9 @@
 
 StudentHub is an Android application designed for IIIT Lucknow students to facilitate academic collaboration, document sharing, and campus communication.
 
+## For Contribution
+- Read [CONTRIBUTE.md](CONTRIBUTORS.md) file.
+
 ## Features
 
 ### 🔐 Authentication

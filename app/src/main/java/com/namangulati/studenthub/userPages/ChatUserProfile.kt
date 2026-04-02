@@ -58,5 +58,21 @@ class ChatUserProfile : AppCompatActivity() {
         {
             finish()
         }
+
+        etemail.isFocusable = false
+        etemail.isFocusableInTouchMode = false
+        etemail.isClickable = true
+
+        etName.isFocusable = false
+        etName.isFocusableInTouchMode = false
+        etName.isClickable = true
+
+        etMobileDetails.isFocusable = false
+        etMobileDetails.isFocusableInTouchMode = false
+        etMobileDetails.isClickable = true
+
+        profileImage.isFocusable = false
+        profileImage.isFocusableInTouchMode = false
+        profileImage.isClickable = true
     }
 }
