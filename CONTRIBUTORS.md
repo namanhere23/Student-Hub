@@ -5,7 +5,7 @@
 ## Architecture Overview
 StudentHub is divided into two main repositories:
 1. **Frontend (Android)**: This repository (Kotlin, Jetpack Compose, XML).
-2. **[Backend (Node.js/Express)](https://github.com/namanhere23/Student_Hub_Backend)**: Handles push notifications (FCM), Cloudinary media management, and custom APIs.
+2. **[Backend](https://github.com/namanhere23/Student_Hub_Backend)**: Handles push notifications (FCM), Cloudinary media management, and custom APIs.
 
 ---
 
@@ -23,34 +23,53 @@ Before you begin, ensure you have the following installed:
 First, get the code on your local machine.
 
 ```bash
-# Clone the Android Frontend
-git clone https://github.com/namanhere23/Student-Hub.git
+# Fork the Android Frontend and then clone it in base folder
+git clone https://github.com/<your_username>/Student-Hub.git
 cd Student-Hub
 
-# Clone the Backend Server
-git clone https://github.com/namanhere23/Student_Hub_Backend.git
+# Fork the Backend Server and then clone it in base folder
+git clone https://github.com/<your_username>/Student_Hub_Backend.git
 ```
+
+Open your Android project on Android Studio
 
 ### Step 2: Firebase Project Setup
 StudentHub relies heavily on Firebase. You **MUST** set up your own Firebase project to run it locally.
 
 1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
-2. Click on the **Android Icon** to add an Android app to the project.
+2. Click on **Add App** then select the **Android icon** to add an Android app to the project.
 3. **Package Name:** Enter `com.namangulati.studenthub`.
-4. **App Nickname:** StudentHub.
-5. **SHA-1 & SHA-256 Certificates:** 
-   - Open the terminal in Android Studio and run `./gradlew signingreport`.
-   - Copy the SHA-1 and SHA-256 keys for the `debug` variant and paste them into Firebase. *(This is mandatory for Google Sign-In!)*
-6. **Download `google-services.json`:**
-   - Download the file and move it into the `app/` directory of your cloned Android project.
+4. **App Nickname:** `StudentHub`.
+   - Click **Next** skipping the other optional setups.
+   - Click **Continue to console**.
+5. **Add SHA Keys:**
+   - In the Firebase Console, go to `Project settings` > `General` > `Your apps`.
+   - Click on `Add fingerprint` and add your SHA-1 and SHA-256 keys. You can find these keys in Android Studio:
+     - Go to the terminal in android studio and run this command:
+       ```bash
+       ./gradlew signingreport
+       ```
+   - If it shows any error it means that your jdk is not properly set up.
+     Watch this to set up JDK properly [Tutorial Video](https://youtu.be/R6MoDMASwag?si=_RAOa6wl3-YyChOq).
+      - Copy the SHA-1 and SHA-256 keys from the report and add them to Firebase.
+      - After adding the keys, download the `google-services.json` file provided and place it in the `app` directory of your project (select `Project` view in Android Studio to see the proper file structure).
 
 ### Step 3: Enable Firebase Services
 In your Firebase Console, make sure you enable and setup the following:
 
-- **Authentication:** Enable both **Email/Password** and **Google**.
+- **Enable Firebase Services:**
+- **Authentication:**
+    - Go to the `Authentication` section from the Drawer in the `Security` in the Firebase Console.
+    - Click on `Get started`
+    - Click on the `Sign-in method` tab and enable `Email/Password` and `Google` sign-in methods. Click on add new provider to add more than one services.
+    - Use your own email for `Support email` and click on save.
+    - Download `google-services.json` and place it in the `app` directory of your project with same name.
 - **Firestore Database:** 
-  - Create the firestore database. 
-  - Go to the **Rules** tab and paste the exact security rules 
+  - Go to the `Firestore` section from the Drawer in the `Database and Storage` in the Firebase Console.
+  - Click on `Create database`
+  - Select the `Location` as `asia-south2(Delhi)` and click next.
+  - Select `Start in production mode` and follow the instructions.
+  - Go to the **Rules** tab and paste the exact security rules and then Publish it
 
 ```javascript
 rules_version = '2';
@@ -159,10 +178,22 @@ service cloud.firestore {
   }
 }
 ```
-- **Cloud Messaging (FCM):** Enable it for push notifications.
 
 ### Step 4: Configure the Android App (`Constants.kt`)
 This is the most crucial part. You need to link your API keys and the deployed backend URLs dynamically.
+
+- GEMINI API KEY
+    - Go to [Google  AI Studio](https://aistudio.google.com/)
+    - Click on Get API key 
+    - Create API Key
+        - Give Name to your key
+        - And choose the Student Hub (Or name given to your project in firebase console)
+        - Create Key
+    - Copy the API Key
+
+- Backend Deployment
+    - Go to [Student Hub Backend](https://github.com/namanhere23/Student_Hub_Backend)
+    - Go to the README.md and deploy both backend as per the steps given there
 
 Navigate to `app/src/main/java/com/namangulati/studenthub/API/Constants.kt` and update the dummy values with your actual keys and deployed service URLs.
 
@@ -181,18 +212,7 @@ object Constants {
 }
 ```
 
-### Step 5: Backend Deployment (FCM & Cloudinary)
-StudentHub relies on a Node.js backend to handle push notifications and Cloudinary media uploading.
-
-1. Go to the backend repository: **[Student_Hub_Backend](https://github.com/namanhere23/Student_Hub_Backend)**.
-2. **Deploy the backend** on a cloud hosting platform like Render, Heroku, or Vercel.
-3. During deployment, make sure you configure the following Environment Variables (`.env`) in your hosting dashboard:
-   - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`
-   - `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` *(which you get from Firebase -> Project Settings -> Service Accounts)*
-4. Once deployed successfully, copy your live backend URL (e.g. `https://my-backend-app.onrender.com`).
-5. **Paste the deployed URL** back into the Android app's `Constants.kt` file for the `BASE_URL` and `FCM_BASE_URL` values.
-
-### Step 6: Sync and Run the App
+### Step 5: Sync and Run the App
 1. Open Android Studio.
 2. Select **File > Open** and choose your cloned `Student-Hub` directory.
 3. Let Gradle sync completely.
